@@ -6,7 +6,8 @@ import Icon from 'react-native-vector-icons/MaterialIcons'
 import Colors from '../assets/Colors';
 
 // Imports de vistas
-import CobrosDeHoyView from '../views/CobrosDeHoy'
+import CobrosDeHoyView from '../views/main/CobrosDeHoy'
+import Productos from '../views/main/Productos'
 
 
 class Placeholder extends Component {
@@ -48,7 +49,7 @@ class BottomNavigation extends Component {
 
     TabBar = CreateTabs({
         Productos: {
-            screen: Placeholder,
+            screen: Productos,
             navigationOptions: {
                 tabBarIcon: () => (
                     <Icon name='store' color='white' size={24}/>
@@ -118,12 +119,12 @@ class BottomNavigation extends Component {
     })
 
     componentDidMount() {
-        console.warn("Elemento Montado")
-        BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
+        // console.warn("Elemento Montado")
+        this.backHandler = BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
     }
 
     componentWillUnmount() {
-        this.handleBackPress.remove(); 
+        this.backHandler.remove(); 
     }
 
     handleBackPress = () => {
