@@ -105,6 +105,17 @@ export default class Login extends Component {
                         </View>
                         <View style={styles.spacer} />
                     </View>
+                    <View style={styles.innerContainer}>
+                        <View style={styles.spacer} />
+                        <View>
+                            <TouchableOpacity onPress={() => {Actions.registro()}}>
+                                <Text style={styles.linkButton}>
+                                    ¿No tienes cuenta? Regístrate aquí
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={styles.spacer} />
+                    </View>
                 </View>
             </View>
         );
@@ -155,5 +166,9 @@ const styles = StyleSheet.create({
         color: Color.white,
         marginVertical: 10,
         fontSize: 15
+    },
+    linkButton: {
+        color: Color.primary,
+        fontWeight: 'bold'
     }
 })
