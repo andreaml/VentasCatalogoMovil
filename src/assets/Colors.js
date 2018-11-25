@@ -1,5 +1,5 @@
 export default {
-    primary: 'dodgerblue',
+    primary: '#4472c4',
     secondary: 'slategray',
     success: 'seagreen',
     danger: 'crimson',

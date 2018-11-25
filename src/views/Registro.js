@@ -224,6 +224,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     fontSize: 18,
     justifyContent: 'center',
+    paddingHorizontal: 10,
     paddingTop: 10,
     width: '100%',
   },

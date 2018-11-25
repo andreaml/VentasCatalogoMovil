@@ -4,7 +4,7 @@ import RegistroView from '../views/Registro'
 
 const RegistroRouter = () => {
     return (
-        <Scene key='registro' type={"reset"} component={RegistroView} hideNavBar/>
+        <Scene key='registro' component={RegistroView} hideNavBar/>
     )
 }
 
