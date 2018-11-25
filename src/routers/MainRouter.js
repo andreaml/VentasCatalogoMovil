@@ -6,6 +6,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons'
 import Colors from '../assets/Colors';
 
 // Imports de vistas
+import ClientesView from '../views/main/Clientes'
 import CobrosDeHoyView from '../views/main/CobrosDeHoy'
 import Productos from '../views/main/Productos'
 
@@ -62,7 +63,7 @@ class BottomNavigation extends Component {
             }
         },
         Clientes: {
-            screen: Placeholder,
+            screen: ClientesView,
             navigationOptions: {
                 tabBarIcon: () => (
                     <Icon name='people' color='white' size={24}/>

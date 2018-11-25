@@ -6,6 +6,8 @@ export default {
     warning: 'gold',
     info: 'lightseagreen',
     light: 'ghostwhite',
+    lightgray: '#e4e4e4',
+    gray: '#bdbdbd',
     dark: 'darkslategray',
     white: 'white'
 }
