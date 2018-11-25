@@ -33,12 +33,6 @@ export default class Registro extends Component {
         const {nombre, apPaterno, apMaterno, correo, contrasena} = this.state;
     }
 
-    _scrollToInput = (reactNode) => {
-        // Add a 'scroll' ref to your ScrollView
-        console.log(reactNode)
-        this.scroll.props.scrollToPosition(0, 0)
-          }
-
     render() {
         return (
             <KeyboardAwareScrollView 
