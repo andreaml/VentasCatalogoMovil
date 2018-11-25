@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Scene } from 'react-native-router-flux';
-import CobrosDeHoyView from '../views/CobrosDeHoy'
+import CobrosDeHoyView from '../views/main/CobrosDeHoy'
 
 const EjemploRouter = () => {
     return (
