@@ -24,8 +24,9 @@ export default class ListItem_Productos extends PureComponent<Props> {
                                 <Image style={styles.image} resizeMode={'cover'} resizeMethod={'scale'} source={{uri: 'https://via.placeholder.com/2000x3000?text=Placeholder'}}></Image>
                                 <View style={styles.footer}>
                                     <Text style={styles.producto}>{nombre}</Text>
-                                    <Text style={styles.descripcion}>{descripcion}</Text>
+                                    <Text style={styles.descripcion} numberOfLines={1}>{descripcion}</Text>
                                     <Text style={styles.precio}>${precio}</Text>
+                                    <View style={styles.carritoSpacer} />
                                 </View>
                             </View>
                         </TouchableOpacity>
@@ -33,7 +34,7 @@ export default class ListItem_Productos extends PureComponent<Props> {
                 </View>
                 <View style={{ position: 'absolute', left: 30, bottom: 20, zIndex: 2 }}>
                     <TouchableOpacity
-                        style={{ backgroundColor: 'black', padding: 3 }}
+                        style={{ backgroundColor: 'black', padding: 3, paddingHorizontal: 8, borderRadius: 2 }}
                         onPress={() => console.warn(`presionado boton ${this.props.id}`)}
                     >
                         <Text style={{
@@ -62,35 +63,41 @@ const styles = StyleSheet.create({
         aspectRatio: 1
     },
     footer: {
+        flex: 1,
         backgroundColor: '#00000033',
         position: 'absolute',
         bottom: 0,
         left: 0,
         right: 0,
-        height: '40%',
+        height: '42%',
         paddingTop: 2,
-        paddingLeft: 10
+        paddingHorizontal: 10
     },
     producto: {
-        marginBottom: 5,
+        flex: 1,
         fontSize: 24,
         color: 'white'
     },
     descripcion: {
-        marginBottom: 5,
+        flex: 1,
         fontSize: 16,
+        lineHeight: 30,
         color: 'white'
     },
     precio: {
-        marginBottom: 10,
+        flex: 1,
         fontSize: 16,
         color: 'white'
+    },
+    carritoSpacer: {
+        flex: 1,
     },
     carrito: {
         marginBottom: 5,
         fontWeight: 'bold',
         fontSize: 16,
-        color: 'white'
+        color: 'white',
+        paddingHorizontal: 2
     },
     container: {
         flex: 1,
