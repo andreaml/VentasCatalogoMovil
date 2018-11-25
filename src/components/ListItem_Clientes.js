@@ -21,7 +21,7 @@ export default class ListItem_Clientes extends PureComponent<Props> {
 
   _domicilioToString(domicilio) {
     const { calle, noExterno, noInterno, colonia, municipio, estado, cp } = domicilio;
-    const stringDomicilio = `${calle} ${noExterno || ''} ${noInterno || ''}, ${colonia}, ${municipio}, ${estado}, ${cp}`;
+    const stringDomicilio = `${calle || ''} ${noExterno || ''} ${noInterno || ''}, ${colonia}, ${municipio}, ${estado}, ${cp}`;
     return stringDomicilio;
   }
 
@@ -34,24 +34,25 @@ export default class ListItem_Clientes extends PureComponent<Props> {
       );
   }
 
+  _mostrarDato(dato) {
+    if (dato)
+      return (
+        <Text>
+          {dato}
+        </Text>
+      );
+  }
+
   render() {
-    const { id, nombre, apPaterno, apMaterno, telefono, correo, domicilio, color } = this.props
+    const { id, nombre, apPaterno, apMaterno, telefono, correo, color } = this.props
     return (
       <View style={[styles.root, { backgroundColor: color ? 'gold' : 'white' }]}>
         <View style={styles.containerCliente}>
           <Text style={styles.textCliente}>
             {nombre} {apPaterno} {apMaterno || ''}
           </Text>
-          <Text>
-            {telefono}
-          </Text>
-          <Text>
-            {correo}
-          </Text>
-          <Text>
-            {this._domicilioToString(domicilio)}
-          </Text>
-          {this._mostrarReferencias(domicilio.referencia)}
+          {this._mostrarDato(telefono)}
+          {this._mostrarDato(correo)}
         </View>
         <View style={styles.containerIcono}>
           <Icon name='chevron-right' color={Colors.gray} size={30}/>

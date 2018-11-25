@@ -1,45 +1,60 @@
 import React from 'react';
-import { View, FlatList, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { View, FlatList, ActivityIndicator, TouchableOpacity, StyleSheet } from 'react-native';
 import BackHandledComponent from '../../components/BackHandledComponent';
 import ListItem_Clientes from '../../components/ListItem_Clientes';
 import Colors from '../../assets/Colors';
+import { GET_Clientes as getClientes } from '../../api';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import ActionButton from 'react-native-action-button';
+import { Actions } from 'react-native-router-flux';
 
 export default class Clientes extends BackHandledComponent {
   constructor(props) {
     super(props);
     this.state = {
       page: 1,
-      data: [{
-        id: 0,
-        idUsuario: 0,
-        nombre: "Andrea",
-        apPaterno: "Muñoz",
-        apMaterno: "Liy",
-        correo: "andreamunozliy@gmail.com",
-        telefono: "3121027157",
-        domicilio: {
-          estado: "Colima",
-          municipio: "Colima",
-          cp: "28017",
-          colonia: "Santa Bárbara",
-          calle: "Av. de La Paz",
-          noExterno: "40",
-          noInterno: "201",
-          referencia: ""
-        }
-      }, ],
+      perPage: 10,
+      clientes: [],
       threshold: 0.5,
       loading: true,
       refreshing: false
     }
   }
 
-  handleOnEndReached = (distanceFromEnd) => {
-    if (this.state.page < 5) {
+  componentDidMount() {
+    this.handleOnRefresh();
+  }
+
+  handleOnRefresh = () => {
+    getClientes(1, this.state.perPage).then(result => {
       this.setState({
-        page: this.state.page + 1,
-        data: [...this.state.data, ...data]
-      });
+        refreshing: true
+      }, () => {
+        this.setState({
+          page: 1,
+          clientes: result.items,
+          pages: parseInt(result.total / this.state.perPage) + 1,
+          threshold: 0.5,
+          loading: true,
+          refreshing: false
+        })
+      })
+    })
+    .catch(err => {
+      console.log(err)
+    })
+  }
+
+  handleOnEndReached = (distanceFromEnd) => {
+    if (this.state.page < this.state.pages) {
+      getClientes(this.state.page + 1, this.state.perPage).then(result => {
+        this.setState({
+          page: this.state.page + 1,
+          clientes: [...this.state.clientes, ...result.items]
+        });
+      }).catch(err => {
+        console.log(err);
+      })
     } else {
       this.setState({
         loading: false
@@ -54,7 +69,7 @@ export default class Clientes extends BackHandledComponent {
       <View style={{flex: 1, marginTop: 5}}>
         <FlatList
           ref={list => this.list = list}
-          data={this.state.data}
+          data={this.state.clientes}
           renderItem={({item}) => (
             <TouchableOpacity onPress={() => console.warn("presionado: " + item.id)}>
               <ListItem_Clientes style={{flex: 1}} {...item} />
@@ -75,350 +90,42 @@ export default class Clientes extends BackHandledComponent {
             this.setState({
               refreshing: true
             }, () => {
-              this.setState({
-                page: 1,
-                data: [    {
-                  id: "1",
-                  telefono: "3121196780",
-                  idPedido: "5236",
-                  hora: "13:30",
-                  total: "2000",
-                },],
-                threshold: 0.5,
-                loading: true,
-                refreshing: false
-              })
+              this.handleOnRefresh();
             })
           }}
           refreshing={this.state.refreshing}
         />
+        <ActionButton 
+          buttonColor="rgba(231,76,60,1)"
+          onPress={() => { Actions.clientesAgregar() }}
+        >
+        </ActionButton>
       </View>
     )
   }
 }
 
-var data = [{
-    id: 0,
-    idUsuario: 0,
-    nombre: "Andrea",
-    apPaterno: "Muñoz",
-    apMaterno: "Liy",
-    correo: "andreamunozliy@gmail.com",
-    telefono: "3121027157",
-    domicilio: {
-      estado: "Colima",
-      municipio: "Colima",
-      cp: "28017",
-      colonia: "Santa Bárbara",
-      calle: "Av. de La Paz",
-      noExterno: "40",
-      noInterno: "201",
-      referencia: ""
-    }
+const styles = StyleSheet.create({
+  root: {
+    borderColor: 'black',
+    elevation: 1,
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginHorizontal: 5,
+    marginVertical: 2,
   },
-  {
-    id: 1,
-    idUsuario: 0,
-    nombre: "Andrea",
-    apPaterno: "Muñoz",
-    apMaterno: "Liy",
-    correo: "andreamunozliy@gmail.com",
-    telefono: "3121027157",
-    domicilio: {
-      estado: "Colima",
-      municipio: "Colima",
-      cp: "28017",
-      colonia: "Santa Bárbara",
-      calle: "Av. de La Paz",
-      noExterno: "40",
-      noInterno: "201",
-      referencia: ""
-    }
+  containerCliente: {
+    padding: 20,
+    width: '90%',
   },
-  {
-    id: 2,
-    idUsuario: 0,
-    nombre: "Andrea",
-    apPaterno: "Muñoz",
-    apMaterno: "Liy",
-    correo: "andreamunozliy@gmail.com",
-    telefono: "3121027157",
-    domicilio: {
-      estado: "Colima",
-      municipio: "Colima",
-      cp: "28017",
-      colonia: "Santa Bárbara",
-      calle: "Av. de La Paz",
-      noExterno: "40",
-      noInterno: "201",
-      referencia: ""
-    }
+  textCliente: {
+    fontSize: 16
   },
-  {
-    id: 3,
-    idUsuario: 0,
-    nombre: "Andrea",
-    apPaterno: "Muñoz",
-    apMaterno: "Liy",
-    correo: "andreamunozliy@gmail.com",
-    telefono: "3121027157",
-    domicilio: {
-      estado: "Colima",
-      municipio: "Colima",
-      cp: "28017",
-      colonia: "Santa Bárbara",
-      calle: "Av. de La Paz",
-      noExterno: "40",
-      noInterno: "201",
-      referencia: ""
-    }
-  },
-  {
-    id: 0,
-    idUsuario: 0,
-    nombre: "Andrea",
-    apPaterno: "Muñoz",
-    apMaterno: "Liy",
-    correo: "andreamunozliy@gmail.com",
-    telefono: "3121027157",
-    domicilio: {
-      estado: "Colima",
-      municipio: "Colima",
-      cp: "28017",
-      colonia: "Santa Bárbara",
-      calle: "Av. de La Paz",
-      noExterno: "40",
-      noInterno: "201",
-      referencia: ""
-    }
-  },
-  {
-    id: 0,
-    idUsuario: 0,
-    nombre: "Andrea",
-    apPaterno: "Muñoz",
-    apMaterno: "Liy",
-    correo: "andreamunozliy@gmail.com",
-    telefono: "3121027157",
-    domicilio: {
-      estado: "Colima",
-      municipio: "Colima",
-      cp: "28017",
-      colonia: "Santa Bárbara",
-      calle: "Av. de La Paz",
-      noExterno: "40",
-      noInterno: "201",
-      referencia: ""
-    }
-  },
-  {
-    id: 0,
-    idUsuario: 0,
-    nombre: "Andrea",
-    apPaterno: "Muñoz",
-    apMaterno: "Liy",
-    correo: "andreamunozliy@gmail.com",
-    telefono: "3121027157",
-    domicilio: {
-      estado: "Colima",
-      municipio: "Colima",
-      cp: "28017",
-      colonia: "Santa Bárbara",
-      calle: "Av. de La Paz",
-      noExterno: "40",
-      noInterno: "201",
-      referencia: ""
-    }
-  },
-  {
-    id: 0,
-    idUsuario: 0,
-    nombre: "Andrea",
-    apPaterno: "Muñoz",
-    apMaterno: "Liy",
-    correo: "andreamunozliy@gmail.com",
-    telefono: "3121027157",
-    domicilio: {
-      estado: "Colima",
-      municipio: "Colima",
-      cp: "28017",
-      colonia: "Santa Bárbara",
-      calle: "Av. de La Paz",
-      noExterno: "40",
-      noInterno: "201",
-      referencia: ""
-    }
-  },
-  {
-    id: 0,
-    idUsuario: 0,
-    nombre: "Andrea",
-    apPaterno: "Muñoz",
-    apMaterno: "Liy",
-    correo: "andreamunozliy@gmail.com",
-    telefono: "3121027157",
-    domicilio: {
-      estado: "Colima",
-      municipio: "Colima",
-      cp: "28017",
-      colonia: "Santa Bárbara",
-      calle: "Av. de La Paz",
-      noExterno: "40",
-      noInterno: "201",
-      referencia: ""
-    }
-  },
-  {
-    id: 0,
-    idUsuario: 0,
-    nombre: "Andrea",
-    apPaterno: "Muñoz",
-    apMaterno: "Liy",
-    correo: "andreamunozliy@gmail.com",
-    telefono: "3121027157",
-    domicilio: {
-      estado: "Colima",
-      municipio: "Colima",
-      cp: "28017",
-      colonia: "Santa Bárbara",
-      calle: "Av. de La Paz",
-      noExterno: "40",
-      noInterno: "201",
-      referencia: ""
-    }
-  },
-  {
-    id: 0,
-    idUsuario: 0,
-    nombre: "Andrea",
-    apPaterno: "Muñoz",
-    apMaterno: "Liy",
-    correo: "andreamunozliy@gmail.com",
-    telefono: "3121027157",
-    domicilio: {
-      estado: "Colima",
-      municipio: "Colima",
-      cp: "28017",
-      colonia: "Santa Bárbara",
-      calle: "Av. de La Paz",
-      noExterno: "40",
-      noInterno: "201",
-      referencia: ""
-    }
-  },
-  {
-    id: 0,
-    idUsuario: 0,
-    nombre: "Andrea",
-    apPaterno: "Muñoz",
-    apMaterno: "Liy",
-    correo: "andreamunozliy@gmail.com",
-    telefono: "3121027157",
-    domicilio: {
-      estado: "Colima",
-      municipio: "Colima",
-      cp: "28017",
-      colonia: "Santa Bárbara",
-      calle: "Av. de La Paz",
-      noExterno: "40",
-      noInterno: "201",
-      referencia: ""
-    }
-  },
-  {
-    id: 0,
-    idUsuario: 0,
-    nombre: "Andrea",
-    apPaterno: "Muñoz",
-    apMaterno: "Liy",
-    correo: "andreamunozliy@gmail.com",
-    telefono: "3121027157",
-    domicilio: {
-      estado: "Colima",
-      municipio: "Colima",
-      cp: "28017",
-      colonia: "Santa Bárbara",
-      calle: "Av. de La Paz",
-      noExterno: "40",
-      noInterno: "201",
-      referencia: ""
-    }
-  },
-  {
-    id: 0,
-    idUsuario: 0,
-    nombre: "Andrea",
-    apPaterno: "Muñoz",
-    apMaterno: "Liy",
-    correo: "andreamunozliy@gmail.com",
-    telefono: "3121027157",
-    domicilio: {
-      estado: "Colima",
-      municipio: "Colima",
-      cp: "28017",
-      colonia: "Santa Bárbara",
-      calle: "Av. de La Paz",
-      noExterno: "40",
-      noInterno: "201",
-      referencia: ""
-    }
-  },
-  {
-    id: 0,
-    idUsuario: 0,
-    nombre: "Andrea",
-    apPaterno: "Muñoz",
-    apMaterno: "Liy",
-    correo: "andreamunozliy@gmail.com",
-    telefono: "3121027157",
-    domicilio: {
-      estado: "Colima",
-      municipio: "Colima",
-      cp: "28017",
-      colonia: "Santa Bárbara",
-      calle: "Av. de La Paz",
-      noExterno: "40",
-      noInterno: "201",
-      referencia: ""
-    }
-  },
-  {
-    id: 0,
-    idUsuario: 0,
-    nombre: "Andrea",
-    apPaterno: "Muñoz",
-    apMaterno: "Liy",
-    correo: "andreamunozliy@gmail.com",
-    telefono: "3121027157",
-    domicilio: {
-      estado: "Colima",
-      municipio: "Colima",
-      cp: "28017",
-      colonia: "Santa Bárbara",
-      calle: "Av. de La Paz",
-      noExterno: "40",
-      noInterno: "201",
-      referencia: ""
-    }
-  },
-  {
-    id: 0,
-    idUsuario: 0,
-    nombre: "Andrea",
-    apPaterno: "Muñoz",
-    apMaterno: "Liy",
-    correo: "andreamunozliy@gmail.com",
-    telefono: "3121027157",
-    domicilio: {
-      estado: "Colima",
-      municipio: "Colima",
-      cp: "28017",
-      colonia: "Santa Bárbara",
-      calle: "Av. de La Paz",
-      noExterno: "40",
-      noInterno: "201",
-      referencia: "Al lado de un oxxo :v"
-    },
-    color: true
-  },
-];
+  containerIcono: {
+    alignItems: 'center',
+    height: '100%',
+    justifyContent: 'center',
+    width: '10%',
+  }
+});
