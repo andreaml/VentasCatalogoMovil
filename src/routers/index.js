@@ -7,15 +7,17 @@ import LoginRouter from './LoginRouter'
 import RegistroRouter from './RegistroRouter'
 import MainRouter from './MainRouter'
 import EjemploRouter from './EjemploRouter'
+import { ClientesAgregar } from './ClientesRouter'
 
 const Router = () => {
     return (
         <Scene key='root'>
             {SplashRouter}
             {LoginRouter}
+            {RegistroRouter}
             {MainRouter}
             {EjemploRouter}
-            {RegistroRouter}
+            {ClientesAgregar}
         </Scene>
     )
 }
