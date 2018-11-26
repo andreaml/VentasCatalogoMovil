@@ -38,6 +38,17 @@ export const GET_Clientes = (page, perPage) => {
         Axios.get(`${CLIENTES}?page=${page}&perPage=${perPage}`).then((response) => {
             resolve(response.data)
         }).catch(err => {
+            console.log(err)
+            reject(err.response)
+        })
+    })
+}
+
+export const POST_Clientes = (cliente) => {
+    return new Promise((resolve, reject) => {
+        Axios.get(`${CLIENTES}`, cliente).then((response) => {
+            resolve(response.data)
+        }).catch(err => {
             reject(err.response)
         })
     })
