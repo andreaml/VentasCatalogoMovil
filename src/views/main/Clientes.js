@@ -8,6 +8,10 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import ActionButton from 'react-native-action-button';
 import { Actions } from 'react-native-router-flux';
 
+/**
+ * Vista para mostrar lista de clientes
+ * @class
+ */
 export default class Clientes extends BackHandledComponent {
   constructor(props) {
     super(props);
@@ -25,6 +29,11 @@ export default class Clientes extends BackHandledComponent {
     this.handleOnRefresh();
   }
 
+  /**
+   * @function handleOnRefresh
+   * @access private
+   * @description Se manda a llamar cuando se refresca la vista o se carga por primera vez. Restablece el state a configuración inicial. Ejecuta función de petición GET para obtener clientes paginados.
+   */
   handleOnRefresh = () => {
     getClientes(1, this.state.perPage).then(result => {
       this.setState({
@@ -45,6 +54,11 @@ export default class Clientes extends BackHandledComponent {
     })
   }
 
+  /**
+   * @function handleOnEndReached
+   * @access private
+   * @description Se manda a llamar cuando al hacer scroll hacia abajo se alcanza el fin de la vista. Modifica el state para aumentar la paginación. Ejecuta función de petición GET para obtener clientes paginados.
+   */
   handleOnEndReached = (distanceFromEnd) => {
     if (this.state.page < this.state.pages) {
       getClientes(this.state.page + 1, this.state.perPage).then(result => {

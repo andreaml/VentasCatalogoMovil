@@ -8,18 +8,48 @@ import Colors from '../../../assets/Colors';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import TextDataWithIcon from '../../../components/TextDataWithIcon';
 
+/**
+ * Vista para mostrar detalles de un cliente
+ * @class
+ */
 export default class ClientesDetalle extends BackHandledComponent {
+  /** @constructor */
   constructor(props) {
     super(props);
+    /** @private */
     this.state = {
       cliente: props.cliente
     }
   }
 
+  /**
+   * @function _nombreToString
+   * @access private
+   * @param {string} nombre - Nombre de la persona
+   * @param {string} apPaterno - Apellido paterno de la persona
+   * @param {(string|null)} apMaterno - Apellido materno de la persona
+   * @description Se concatenan los elementos de un nombre completo.
+   * @returns {string} Nombre completo
+   */
   _nombreToString(nombre, apPaterno, apMaterno) {
     return `${nombre} ${apPaterno} ${apMaterno || ''}`;
   }
 
+  /**
+   * @function _domicilioToString
+   * @access private
+   * @param {(Object|null)} domicilio - Objeto de domicilio del cliente
+   * @param {string} cliente.domicilio.calle - Calle de domicilio del cliente
+   * @param {string} cliente.domicilio.noExterno - Número externo de domicilio del cliente
+   * @param {string} cliente.domicilio.noInterno - Número interno de domicilio del cliente
+   * @param {string} cliente.domicilio.colonia - Colonia de domicilio del cliente
+   * @param {string} cliente.domicilio.municipio - Municipio de domicilio del cliente
+   * @param {string} cliente.domicilio.estado - Estado de domicilio del cliente
+   * @param {string} cliente.domicilio.cp - Código postal de domicilio del cliente
+   * @param {string} cliente.domicilio.referencia - Referencia de domicilio del cliente
+   * @description Se concatenan los elementos de un domicilio.
+   * @returns {string} Domicilio completo o string vacío si el objeto es nulo
+   */
   _domicilioToString(domicilio) {
     if (domicilio) {
       const { calle, noExterno, noInterno, colonia, municipio, estado, cp, referencia } = domicilio;
@@ -28,14 +58,6 @@ ${(referencia) ? 'Referencia: ' + referencia : ''}`;
       return stringDomicilio;
     }
     return '';
-  }
-
-  _mostrarDatos(datos) {
-    let componentes = [];
-    for (const dato in datos) {
-      componentes.push(this._mostrarDato(dato, datos[dato]))
-    }
-    return componentes;
   }
 
   render() {

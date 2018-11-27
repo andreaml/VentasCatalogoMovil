@@ -9,6 +9,10 @@ import TextField from '../../../components/TextField';
 import validate from '../../../utils/validationWrapper';
 import Colors from '../../../assets/Colors';
 
+/**
+ * Vista para agregar un cliente
+ * @class
+ */
 export default class ClientesAgregar extends BackHandledComponent {
   state = {
     cliente: {
@@ -47,6 +51,10 @@ export default class ClientesAgregar extends BackHandledComponent {
     },
   }
 
+  /** @function _validarFormulario
+   * @access private
+   * @description Función para ejecutar la validación del formulario, y actualiza el state de los errores. Si el formulario es válido, se ejecta función para registrar cliente, si no, se lanza un alert.
+   */
   _validarFormulario() {
     this.setState({
       errores: {
@@ -81,6 +89,12 @@ export default class ClientesAgregar extends BackHandledComponent {
     });
   }
 
+  /** @function _asignarValidezFormulario
+   * @access private
+   * @param {Object} errores - Objeto de errores
+   * @description Función recursiva para validar formulario. Evalúa un objeto de errores, si encuentra un valor en la propiedad se toma como no válido.
+   * @returns {boolean} Validez de formulario
+   */
   _asignarValidezFormulario = (errores) => {
     for (const index in errores) {
       if (typeof errores[index] == 'object') {
@@ -93,6 +107,11 @@ export default class ClientesAgregar extends BackHandledComponent {
     return true;
   }
 
+  /**
+   * @function registrarCliente
+   * @access private
+   * @description Se ejecuta función de petición POST para registrar un cliente. Al finalizar la petición, se muestran alerts para retroalimentar al usuario.
+   */
   registrarCliente() {
     const { cliente } = this.state;
     registrarCliente(cliente).then(data => {
