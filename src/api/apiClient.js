@@ -46,7 +46,17 @@ export const GET_Clientes = (page, perPage) => {
 
 export const POST_Clientes = (cliente) => {
     return new Promise((resolve, reject) => {
-        Axios.get(`${CLIENTES}`, cliente).then((response) => {
+        Axios.post(CLIENTES, cliente).then((response) => {
+            resolve(response.data)
+        }).catch(err => {
+            reject(err.response)
+        })
+    })
+}
+
+export const PUT_Clientes = (idCliente, cliente) => {
+    return new Promise((resolve, reject) => {
+        Axios.put(`${CLIENTES}/${idCliente}`, cliente).then((response) => {
             resolve(response.data)
         }).catch(err => {
             reject(err.response)
