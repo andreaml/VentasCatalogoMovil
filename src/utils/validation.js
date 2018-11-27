@@ -121,6 +121,25 @@ const validation = {
       flags: 'g',
       message: '^Ingrese sólo números'
     },
+  },
+
+  price: {
+    presence: {
+      allowEmpty: false,
+      message:'^Este campo es obligatorio'
+    },
+    format: {
+      pattern: /^[+-]?([0-9]*[.])?[0-9]+$/,
+      flags: 'g',
+      message: '^Ingrese una cantidad válida'
+    }
+  },
+
+  notEmpty: {
+    presence: {
+      allowEmpty: false,
+      message: '^Este campo es obligatorio'
+    }
   }
 }
   
