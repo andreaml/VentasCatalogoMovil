@@ -5,6 +5,10 @@ import ListItem_Productos from '../../components/ListItem_Productos'
 import Colors from '../../assets/Colors';
 import {GET_Productos as getProductos} from '../../api'
 
+/**
+ * @class Productos
+ * @description Vista de los productos utilizada dentro del tabView
+ */
 export default class Productos extends BackHandledComponent {
     constructor(props) {
         super(props);
@@ -19,9 +23,73 @@ export default class Productos extends BackHandledComponent {
     }
 
     componentDidMount() {
+        // Obtenemos la primer página de elementos al momento de cargar el componente
         this.handleOnRefresh();
     }
 
+    /**
+     * @function AgregarElemento
+     * @description Agrega un elemento a la lista de manera dinámica sin actualizarla
+     * @param {Object} newItem - El prodcuto nuevo
+     * @param {string} newItem.nombre - Nombre del produto
+     * @param {string} newItem.precio - Precio del producto
+     * @param {string} newItem.descripcion - Descripcion del producto
+     * @param {string} newItem.imagen - Cadena de la uri de la imagen del producto
+     */
+    AgregarElemento(newItem) {
+        this.setState({
+            data: [
+                ...this.state.data,
+                newItem
+            ]
+        })
+    }
+
+    /**
+     * @function EliminarElemento
+     * @description Elimina un elemento a la lista de manera dinámica sin actualizarla
+     * @param {number} id - Id del producto a eliminar
+     */
+    EliminarElemento(id) {
+        const arrayTemp = this.state.data;
+        arrayTemp.find((element, index, array) => {
+            if (element.id === id) {
+                array.splice(index, 1);
+                return true;
+            }
+        })
+        this.setState({
+            data: arrayTemp
+        })
+    }
+
+    /**
+     * @function ModificarElemento
+     * @description Modifica un elemento a la lista de manera dinámica sin actualizarla
+     * @param {number} id - Id del producto a modificar
+     * @param {Object} updatedItem - El prodcuto nuevo
+     * @param {string} updatedItem.nombre - Nombre del produto
+     * @param {string} updatedItem.precio - Precio del producto
+     * @param {string} updatedItem.descripcion - Descripcion del producto
+     * @param {string} updatedItem.imagen - Cadena de la uri de la imagen del producto
+     */
+    ModificarElemento(id, updatedItem) {
+        const arrayTemp = this.state.data;
+        arrayTemp.find((element, index, array) => {
+            if (element.id === id) {
+                array[index] = updatedItem;
+                return true;
+            }
+        })
+        this.setState({
+            data: arrayTemp
+        })
+    }
+
+    /**
+     * @function handleOnRefresh
+     * @description Maneja el evento onRefresh de la lista, el gesto de 'jalar' la lista ara actualizarla
+     */
     handleOnRefresh = () => {
         getProductos(1, 4).then(result => {
             console.log(result)
@@ -40,8 +108,11 @@ export default class Productos extends BackHandledComponent {
         })
     }
 
-    handleOnEndReached = (distanceFromEnd) => {
-        console.log(this.state.pages);
+    /**
+     * @function handleOnEndReached
+     * @description Maneja evento de haber llegado el fondo de la lista, le pide mas elementos al servidor
+     */
+    handleOnEndReached = () => {
         if (this.state.page < this.state.pages) {
             getProductos(this.state.page + 1, 4).then(result => {
                 this.setState({
