@@ -1,11 +1,13 @@
 import React, { PureComponent } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import { Actions } from 'react-native-router-flux';
 
 type Props = {
     id: number,
     nombre: string,
     descripcion: string,
-    precio: number
+    precio: number,
+    imagen?: string
 }
 
 export default class ListItem_Productos extends PureComponent<Props> {
@@ -15,13 +17,17 @@ export default class ListItem_Productos extends PureComponent<Props> {
 
     render() {
         const { nombre, descripcion, precio } = this.props
+        console.log(this.props.imagen);
         return (
             <View style={{flex: 1}}>
                 <View>
                     <View style={{zIndex: 1}}>
-                        <TouchableOpacity onPress={() => console.warn(`presionada tarjeta ${this.props.id}`)}>
+                        <TouchableOpacity onPress={() => {
+                            const {id, nombre, descripcion, precio, imagen} = this.props
+                            Actions.productosDetalle({id, nombre, descripcion, precio, imagen})
+                        }}>
                             <View style={styles.root}>
-                                <Image style={styles.image} resizeMode={'cover'} resizeMethod={'scale'} source={{uri: 'https://via.placeholder.com/2000x3000?text=Placeholder'}}></Image>
+                                <Image style={styles.image} resizeMode={'cover'} resizeMethod={'scale'} source={{uri: this.props.imagen || 'https://via.placeholder.com/2000x3000?text=Placeholder'}}></Image>
                                 <View style={styles.footer}>
                                     <Text style={styles.producto}>{nombre}</Text>
                                     <Text style={styles.descripcion} numberOfLines={1}>{descripcion}</Text>
@@ -63,7 +69,7 @@ const styles = StyleSheet.create({
         aspectRatio: 1
     },
     footer: {
-        flex: 1,
+        flex: 1, 
         backgroundColor: '#00000033',
         position: 'absolute',
         bottom: 0,
