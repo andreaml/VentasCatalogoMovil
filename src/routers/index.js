@@ -7,7 +7,7 @@ import LoginRouter from './LoginRouter'
 import RegistroRouter from './RegistroRouter'
 import MainRouter from './MainRouter'
 import EjemploRouter from './EjemploRouter'
-import { ClientesAgregar } from './ClientesRouter'
+import { ClientesAgregar, ClientesDetalle } from './ClientesRouter'
 
 const Router = () => {
     return (
@@ -18,6 +18,7 @@ const Router = () => {
             {MainRouter}
             {EjemploRouter}
             {ClientesAgregar}
+            {ClientesDetalle}
         </Scene>
     )
 }

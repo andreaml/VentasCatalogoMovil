@@ -71,7 +71,7 @@ export default class Clientes extends BackHandledComponent {
           ref={list => this.list = list}
           data={this.state.clientes}
           renderItem={({item}) => (
-            <TouchableOpacity onPress={() => console.warn("presionado: " + item.id)}>
+            <TouchableOpacity onPress={() => {Actions.clientesDetalle({cliente: item})}}>
               <ListItem_Clientes style={{flex: 1}} {...item} />
             </TouchableOpacity>
           )}

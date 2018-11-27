@@ -18,22 +18,7 @@ export default class ListItem_Clientes extends PureComponent<Props> {
   constructor(props) {
     super(props);
   }
-
-  _domicilioToString(domicilio) {
-    const { calle, noExterno, noInterno, colonia, municipio, estado, cp } = domicilio;
-    const stringDomicilio = `${calle || ''} ${noExterno || ''} ${noInterno || ''}, ${colonia}, ${municipio}, ${estado}, ${cp}`;
-    return stringDomicilio;
-  }
-
-  _mostrarReferencias(referencia) {
-    if (referencia)
-      return (
-        <Text>
-          Referencia: {referencia}
-        </Text>
-      );
-  }
-
+  
   _mostrarDato(dato) {
     if (dato)
       return (
