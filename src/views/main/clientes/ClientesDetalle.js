@@ -1,10 +1,11 @@
 import React from 'react';
-import { View, FlatList, ActivityIndicator, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import BackHandledComponent from '../../../components/BackHandledComponent';
 import { GET_Clientes as getClientes } from '../../../api';
 import ActionButton from 'react-native-action-button';
 import { Actions } from 'react-native-router-flux';
 import Colors from '../../../assets/Colors';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import TextDataWithIcon from '../../../components/TextDataWithIcon';
 
 export default class ClientesDetalle extends BackHandledComponent {
@@ -23,7 +24,7 @@ export default class ClientesDetalle extends BackHandledComponent {
     if (domicilio) {
       const { calle, noExterno, noInterno, colonia, municipio, estado, cp, referencia } = domicilio;
       const stringDomicilio = `${calle || ''} ${noExterno || ''} ${(noInterno) ? 'Interior: ' + noInterno : ''}, ${colonia}, ${municipio}, ${estado}, ${cp}
-      ${(referencia) ? 'Referencia: ' + referencia : ''}`;
+${(referencia) ? 'Referencia: ' + referencia : ''}`;
       return stringDomicilio;
     }
     return '';
@@ -69,6 +70,33 @@ export default class ClientesDetalle extends BackHandledComponent {
           description={this._domicilioToString(domicilio)}
         >
         </TextDataWithIcon>
+        <ActionButton 
+          buttonColor={Colors.info} 
+          renderIcon={active => (<Icon name="settings" style={styles.actionButtonIcon}/>)}>
+        >
+          <ActionButton.Item 
+            buttonColor={Colors.primary} 
+            title="Editar" 
+            onPress={() => { Actions.clientesEditar({cliente: this.state.cliente}) }}
+          >
+            <Icon name="edit" style={styles.actionButtonIcon} />
+          </ActionButton.Item>
+          <ActionButton.Item 
+            buttonColor={Colors.danger} 
+            title="Eliminar" 
+            onPress={() => {
+              Alert.alert('Eliminar cliente','¿Está seguro de que desea eliminar este cliente?',
+                [
+                  {text: 'Sí', onPress: () => Actions.clientesDetalle({cliente: data})},
+                  {text: 'No'},
+                ],
+                { cancelable: true }
+              );
+            }}
+          >
+            <Icon name="delete" style={styles.actionButtonIcon} />
+          </ActionButton.Item>
+        </ActionButton>
       </View>
     )
   }
@@ -89,4 +117,8 @@ const styles = StyleSheet.create({
   dataText: {
     fontSize: 18
   },
+  actionButtonIcon: {
+    color: Colors.white,
+    fontSize: 20
+  }
 });
