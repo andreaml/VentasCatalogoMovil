@@ -96,7 +96,7 @@ export default class Clientes extends BackHandledComponent {
           refreshing={this.state.refreshing}
         />
         <ActionButton 
-          buttonColor="rgba(231,76,60,1)"
+          buttonColor={Colors.info}
           onPress={() => { Actions.clientesAgregar() }}
         >
         </ActionButton>
