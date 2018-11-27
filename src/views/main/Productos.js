@@ -24,7 +24,7 @@ export default class Productos extends BackHandledComponent {
         this.handleOnRefresh();
     }
 
-    addItem(newItem) {
+    AgregarElemento(newItem) {
         this.setState({
             data: [
                 ...this.state.data,
@@ -33,7 +33,7 @@ export default class Productos extends BackHandledComponent {
         })
     }
 
-    deleteItem(id) {
+    EliminarElemento(id) {
         const arrayTemp = this.state.data;
         arrayTemp.find((element, index, array) => {
             if (element.id === id) {
@@ -46,7 +46,7 @@ export default class Productos extends BackHandledComponent {
         })
     }
 
-    updateItem(id, updatedItem) {
+    ModificarElemento(id, updatedItem) {
         const arrayTemp = this.state.data;
         arrayTemp.find((element, index, array) => {
             if (element.id === id) {
@@ -119,7 +119,7 @@ export default class Productos extends BackHandledComponent {
                 />
                 <ActionButton
                     buttonColor="rgba(231,76,60,1)"
-                    onPress={() => { Actions.productosEditar() }}
+                    onPress={() => { Actions.productosAgregar() }}
                 />
             </View>
         )

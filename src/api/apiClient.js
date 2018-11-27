@@ -23,6 +23,7 @@ export const registrarUsuario = (usuario) => {
   })
 }
 
+// ----------- Productos -----------
 export const GET_Productos = (page, perPage) => {
     return new Promise((resolve, reject) => {
         Axios.get(`${PRODUCTOS}?page=${page}&perPage=${perPage}`).then((response) => {
@@ -46,6 +47,27 @@ export const POST_Productos = (producto) => {
     })
 }
 
+export const PUT_Productos = (id, producto) => {
+    return new Promise((resolve, reject) => {
+        Axios.put(`${PRODUCTOS}/${id}`, producto).then((response) => {
+            resolve(response.data)
+        }).catch(err => {
+            reject(err)
+        })
+    })
+}
+
+export const DELETE_Productos = (id) => {
+    return new Promise((resolve, reject) => {
+        Axios.delete(`${PRODUCTOS}/${id}`).then((response) => {
+            resolve(response.data)
+        }).catch(err => {
+            reject(err)
+        })
+    })
+}
+
+// ----------- Clientes -----------
 export const GET_Clientes = (page, perPage) => {
     return new Promise((resolve, reject) => {
         Axios.get(`${CLIENTES}?page=${page}&perPage=${perPage}`).then((response) => {

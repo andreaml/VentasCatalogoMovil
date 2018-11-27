@@ -4,6 +4,7 @@ import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import ReactNativeParallaxHeader from 'react-native-parallax-header';
 import Colors from '../../../assets/Colors'
+import {DELETE_Productos as deleteProducto} from '../../../api'
 
 type Props = {
     id: number,
@@ -18,24 +19,34 @@ class ProductosDetalle extends Component<Props> {
         super(props);   
     }
 
+    handleOnEditPress = () => {
+        const { id, nombre, descripcion, precio, imagen } = this.props;
+        Actions.productosModificar({ id, nombre, descripcion, precio, imagen });
+    }
+
     handleOnDeletePress = () => {
         Alert.alert(
             'Eliminar Producto',
             '¿Está seguro de eliminar este producto? Esta acción no se puede deshacer',
             [
                 {text: 'Cancelar', style: 'cancel'},
-                {text: 'Eliminar', style: 'destructive', onPress: () => Actions.pop({
-                    refresh: {
-                        updates: {
-                            productos: {
-                                delete: this.props.id
-                            }
-                        }
-                    }
-                })},
+                {text: 'Eliminar', style: 'destructive', onPress: this.deleteProducto}
             ],
             { cancelable: false }
         )
+    }
+
+    deleteProducto = () => {
+        deleteProducto(this.props.id).then(() => {
+            Actions.pop({
+                refresh: {
+                    updates: {
+                        accion: 'EliminarProducto',
+                        valor: this.props.id
+                    }
+                }
+            });
+        }).catch(err => console.log(err));
     }
 
     renderContent = () => (
@@ -45,7 +56,7 @@ class ProductosDetalle extends Component<Props> {
             </Text>
             <Text style={{marginTop: 25, fontSize: 24}}>Precio: ${parseFloat(this.props.precio) || "500.00"}</Text>
             <View style={{flexDirection: 'row', width: '100%', height: 60, marginTop: 20}}>
-                <TouchableOpacity style={styles.botonContainer}>
+                <TouchableOpacity style={styles.botonContainer} onPress={this.handleOnEditPress}>
                     <View style={{flex: 0.5, justifyContent: 'center', alignItems: 'center'}}>
                         <Icon name='edit' color={Colors.secondary} size={24} />
                     </View>

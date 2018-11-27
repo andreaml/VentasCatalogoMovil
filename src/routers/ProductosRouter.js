@@ -1,18 +1,18 @@
 import React, { Component } from 'react';
 import { Scene } from 'react-native-router-flux';
 import productosDetalle from '../views/main/productos/ProductosDetalle'
-import productosEditar from '../views/main/productos/ProductosEditar'
-// import clientesDetalle from '../views/main/clientes/ClientesDetalle'
+import productosAgregar from '../views/main/productos/ProductosAgregar'
+import productosModificar from '../views/main/productos/ProductosModificar'
 
-// const _productosAgregar = () => {
-//   return (
-//     <Scene key='clientesAgregar' component={clientesAgregar} title='Agregar cliente'/>
-//   )
-// }
-
-const _productosEditar = () => {
+const _productosAgregar = () => {
   return (
-    <Scene key='productosEditar' component={productosEditar} title='Editar producto'/>
+    <Scene key='productosAgregar' component={productosAgregar} title='Agregar producto'/>
+  )
+}
+
+const _productosModificar = () => {
+  return (
+    <Scene key='productosModificar' component={productosModificar} title='Editar producto'/>
   )
 }
 
@@ -22,6 +22,6 @@ const _productosDetalle = () => {
   )
 }
 
-// export const ClientesAgregar  = _clientesAgregar();
-export const ProductosEditar   = _productosEditar();
-export const ProductosDetalle  = _productosDetalle();
+export const ProductosModificar = _productosModificar();
+export const ProductosAgregar   = _productosAgregar();
+export const ProductosDetalle   = _productosDetalle();

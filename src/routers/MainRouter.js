@@ -8,7 +8,7 @@ import Colors from '../assets/Colors';
 // Imports de vistas
 import ClientesView from '../views/main/Clientes'
 import CobrosDeHoyView from '../views/main/CobrosDeHoy'
-import Productos from '../views/main/Productos'
+import ProductosView from '../views/main/Productos'
 
 
 class Placeholder extends Component {
@@ -48,14 +48,27 @@ class BottomNavigation extends Component {
     componentWillReceiveProps(nextProps) {
         console.log(nextProps)
         if (nextProps.updates) { // Si hay algo que actualizar
-            if (nextProps.updates.productos) { // Si lo que hay que actualizar son productos
-                if (nextProps.updates.productos.delete) {
-                    this.productos.deleteItem(nextProps.updates.productos.delete)
-                }
-                if (nextProps.updates.productos.add) {
-                    console.log(nextProps.updates.productos.add);
-                    this.productos.addItem(nextProps.updates.productos.add)
-                }
+            switch (nextProps.updates.accion) {
+                // ------ Producto
+                case 'AgregarProducto': 
+                    this.productos.AgregarElemento(nextProps.updates.valor)
+                    break
+                case 'ModificarProducto': 
+                    this.productos.ModificarElemento(nextProps.updates.valor)
+                    break
+                case 'EliminarProducto': 
+                    this.productos.EliminarElemento(nextProps.updates.valor)
+                    break
+                // ------ Clientes
+                case 'AgregarCliente': 
+                    // this.productos.AgregarElemento(nextProps.updates.productos.agregar)
+                    break
+                case 'ModificarCliente': 
+                    // this.productos.ModificarElemento(nextProps.updates.productos.add)
+                    break
+                case 'EliminarCliente': 
+                    // this.productos.EliminarElemento(nextProps.updates.productos.eliminar)
+                    break
             }
             Actions.refresh({updates: null});
         }
@@ -69,7 +82,7 @@ class BottomNavigation extends Component {
 
     TabBar = CreateTabs({
         Productos: {
-            screen: () => <Productos ref={productos => this.productos = productos} />,
+            screen: () => <ProductosView ref={productos => this.productos = productos} />,
             navigationOptions: {
                 tabBarIcon: () => (
                     <Icon name='store' color='white' size={24}/>

@@ -5,11 +5,11 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import Colors from '../../../assets/Colors'
 import ImagePicker from 'react-native-image-crop-picker'
 import TextField from '../../../components/TextField'
-import validate from '../../..//utils/validationWrapper';
+import validate from '../../../utils/validationWrapper';
 import { Actions } from 'react-native-router-flux';
 import { POST_Productos as AgregarProductoRequest } from '../../../api'
 
-class ProductosEditar extends Component {
+class ProductosAgregar extends Component {
 
     state = {
         errores: {
@@ -68,11 +68,10 @@ class ProductosEditar extends Component {
             Actions.pop()
             setTimeout(() => Actions.refresh({
                 updates: {
-                    productos: {
-                        add: {
-                            ...this.state.producto,
-                            imagen: `data:image/jpeg;base64,${this.state.producto.imagen}`
-                        }
+                    accion: 'AgregarProducto',
+                    valor: {
+                        ...this.state.producto,
+                        imagen: `data:image/jpeg;base64,${this.state.producto.imagen}`                        
                     }
                 }
             }), 0);
@@ -285,4 +284,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default ProductosEditar;
+export default ProductosAgregar;
