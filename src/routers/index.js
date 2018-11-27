@@ -8,6 +8,7 @@ import RegistroRouter from './RegistroRouter'
 import MainRouter from './MainRouter'
 import EjemploRouter from './EjemploRouter'
 import { ClientesAgregar } from './ClientesRouter'
+import { ProductosDetalle, ProductosEditar } from './ProductosRouter'
 
 const Router = () => {
     return (
@@ -18,6 +19,8 @@ const Router = () => {
             {MainRouter}
             {EjemploRouter}
             {ClientesAgregar}
+            {ProductosDetalle}
+            {ProductosEditar}
         </Scene>
     )
 }

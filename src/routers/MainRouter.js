@@ -33,6 +33,9 @@ class BottomNavigation extends Component {
         super(props);
 
         this.state = {
+            updates: {
+                productos: 123, // Controla eliminados y modificados
+            },
             backToExit: true,
             title: 'Cobros de hoy'
         }
@@ -40,6 +43,22 @@ class BottomNavigation extends Component {
     
     componentDidMount() {
         this.refresh();
+    }
+
+    componentWillReceiveProps(nextProps) {
+        console.log(nextProps)
+        if (nextProps.updates) { // Si hay algo que actualizar
+            if (nextProps.updates.productos) { // Si lo que hay que actualizar son productos
+                if (nextProps.updates.productos.delete) {
+                    this.productos.deleteItem(nextProps.updates.productos.delete)
+                }
+                if (nextProps.updates.productos.add) {
+                    console.log(nextProps.updates.productos.add);
+                    this.productos.addItem(nextProps.updates.productos.add)
+                }
+            }
+            Actions.refresh({updates: null});
+        }
     }
 
     refresh = (title = 'Cobros de hoy', backToExit = true) => {
@@ -50,7 +69,7 @@ class BottomNavigation extends Component {
 
     TabBar = CreateTabs({
         Productos: {
-            screen: Productos,
+            screen: () => <Productos ref={productos => this.productos = productos} />,
             navigationOptions: {
                 tabBarIcon: () => (
                     <Icon name='store' color='white' size={24}/>
@@ -59,8 +78,8 @@ class BottomNavigation extends Component {
                     this.refresh('Productos', false);
                     defaultHandler();
                 },
-                tabBarColor: Colors.success,
-            }
+                tabBarColor: Colors.success,                
+            },
         },
         Clientes: {
             screen: ClientesView,
@@ -138,7 +157,7 @@ class BottomNavigation extends Component {
 
     render() {
         return (
-            <View style={{flex: 1, elevation: 5}}>
+            <View style={{flex: 1}}>
                 <this.TabBar/>
             </View>
         )
