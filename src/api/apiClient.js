@@ -26,6 +26,19 @@ export const registrarUsuario = (usuario) => {
 export const GET_Productos = (page, perPage) => {
     return new Promise((resolve, reject) => {
         Axios.get(`${PRODUCTOS}?page=${page}&perPage=${perPage}`).then((response) => {
+            response.data.items.forEach((producto, index, array) => {
+                array[index].imagen = `${URL}/public/img/${producto.imagen}.jpg`
+            });
+            resolve(response.data)
+        }).catch(err => {
+            reject(err.response)
+        })
+    })
+}
+
+export const POST_Productos = (producto) => {
+    return new Promise((resolve, reject) => {
+        Axios.post(PRODUCTOS, producto).then((response) => {
             resolve(response.data)
         }).catch(err => {
             reject(err.response)
