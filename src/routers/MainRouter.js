@@ -8,7 +8,7 @@ import Colors from '../assets/Colors';
 // Imports de vistas
 import ClientesView from '../views/main/Clientes'
 import CobrosDeHoyView from '../views/main/CobrosDeHoy'
-import Productos from '../views/main/Productos'
+import ProductosView from '../views/main/Productos'
 
 
 class Placeholder extends Component {
@@ -33,6 +33,9 @@ class BottomNavigation extends Component {
         super(props);
 
         this.state = {
+            updates: {
+                productos: 123, // Controla eliminados y modificados
+            },
             backToExit: true,
             title: 'Cobros de hoy'
         }
@@ -40,6 +43,35 @@ class BottomNavigation extends Component {
     
     componentDidMount() {
         this.refresh();
+    }
+
+    componentWillReceiveProps(nextProps) {
+        console.log(nextProps)
+        if (nextProps.updates) { // Si hay algo que actualizar
+            switch (nextProps.updates.accion) {
+                // ------ Producto
+                case 'AgregarProducto': 
+                    this.productos.AgregarElemento(nextProps.updates.valor)
+                    break
+                case 'ModificarProducto': 
+                    this.productos.ModificarElemento(nextProps.updates.valor)
+                    break
+                case 'EliminarProducto': 
+                    this.productos.EliminarElemento(nextProps.updates.valor)
+                    break
+                // ------ Clientes
+                case 'AgregarCliente': 
+                    // this.productos.AgregarElemento(nextProps.updates.productos.agregar)
+                    break
+                case 'ModificarCliente': 
+                    // this.productos.ModificarElemento(nextProps.updates.productos.add)
+                    break
+                case 'EliminarCliente': 
+                    // this.productos.EliminarElemento(nextProps.updates.productos.eliminar)
+                    break
+            }
+            Actions.refresh({updates: null});
+        }
     }
 
     refresh = (title = 'Cobros de hoy', backToExit = true) => {
@@ -50,7 +82,7 @@ class BottomNavigation extends Component {
 
     TabBar = CreateTabs({
         Productos: {
-            screen: Productos,
+            screen: () => <ProductosView ref={productos => this.productos = productos} />,
             navigationOptions: {
                 tabBarIcon: () => (
                     <Icon name='store' color='white' size={24}/>
@@ -59,8 +91,8 @@ class BottomNavigation extends Component {
                     this.refresh('Productos', false);
                     defaultHandler();
                 },
-                tabBarColor: Colors.success,
-            }
+                tabBarColor: Colors.success,                
+            },
         },
         Clientes: {
             screen: ClientesView,
@@ -138,7 +170,7 @@ class BottomNavigation extends Component {
 
     render() {
         return (
-            <View style={{flex: 1, elevation: 5}}>
+            <View style={{flex: 1}}>
                 <this.TabBar/>
             </View>
         )

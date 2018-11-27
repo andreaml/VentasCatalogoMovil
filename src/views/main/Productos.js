@@ -3,7 +3,9 @@ import {View, FlatList, ActivityIndicator, TouchableOpacity, Text } from 'react-
 import BackHandledComponent from '../../components/BackHandledComponent';
 import ListItem_Productos from '../../components/ListItem_Productos'
 import Colors from '../../assets/Colors';
+import ActionButton from 'react-native-action-button';
 import {GET_Productos as getProductos} from '../../api'
+import { Actions } from 'react-native-router-flux'
 
 /**
  * @class Productos
@@ -92,7 +94,6 @@ export default class Productos extends BackHandledComponent {
      */
     handleOnRefresh = () => {
         getProductos(1, 4).then(result => {
-            console.log(result)
             this.setState({
                 refreshing: true
             }, () => {
@@ -115,6 +116,7 @@ export default class Productos extends BackHandledComponent {
     handleOnEndReached = () => {
         if (this.state.page < this.state.pages) {
             getProductos(this.state.page + 1, 4).then(result => {
+                console.log(result);
                 this.setState({
                     page: this.state.page + 1,
                     data: [...this.state.data, ...result.items]
@@ -125,8 +127,6 @@ export default class Productos extends BackHandledComponent {
         } else {
             this.setState({
                 loading: false
-            }, () => {
-                console.log("Final alcanzado");
             })
         }
     }
@@ -154,11 +154,10 @@ export default class Productos extends BackHandledComponent {
                     onRefresh={() => this.handleOnRefresh()}
                     refreshing={this.state.refreshing}
                 />
-            {/* <ListItem_Productos
-                producto={'Producto 1'}
-                precio={500}
-                descripcion={'asdasdasasdasd'}
-            /> */}
+                <ActionButton
+                    buttonColor="rgba(231,76,60,1)"
+                    onPress={() => { Actions.productosAgregar() }}
+                />
             </View>
         )
     }
