@@ -1,23 +1,40 @@
 import React from 'react';
 import BackHandledComponent from '../../../components/BackHandledComponent';
-import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import Color from '../../../assets/Colors';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import Icon from 'react-native-vector-icons/MaterialIcons'
-import { POST_Clientes as registrarCliente} from '../../../api';
+import { POST_Clientes as registrarCliente } from '../../../api';
 import TextField from '../../../components/TextField';
 import validate from '../../../utils/validationWrapper';
 import Colors from '../../../assets/Colors';
 
 export default class ClientesAgregar extends BackHandledComponent {
   state = {
-    nombre: '',
-    apPaterno: '',
-    apMaterno: '',
-    telefono: '',
-    correo: '',
-    domicilio: {
+    cliente: {
+      nombre: '',
+      apPaterno: '',
+      apMaterno: '',
+      telefono: '',
+      correo: '',
+      domicilio: {
+          calle: '',
+          noExterno: '',
+          noInterno: '',
+          colonia: '',
+          municipio: '',
+          estado: '',
+          cp: '',
+          referencia: '',
+      }
+    },
+    errores: {
+      nombre: '',
+      apPaterno: '',
+      apMaterno: '',
+      telefono: '',
+      correo: '',
+      domicilio: {
         calle: '',
         noExterno: '',
         noInterno: '',
@@ -26,22 +43,6 @@ export default class ClientesAgregar extends BackHandledComponent {
         estado: '',
         cp: '',
         referencia: '',
-    },
-    errores: {
-      errorNombre: '',
-      errorApPaterno: '',
-      errorApMaterno: '',
-      errorTelefono: '',
-      errorCorreo: '',
-      errorDomicilio: {
-        errorCalle: '',
-        errorNoExterno: '',
-        errorNoInterno: '',
-        errorColonia: '',
-        errorMunicipio: '',
-        errorEstado: '',
-        errorCp: '',
-        errorReferencia: '',
       }
     },
   }
@@ -49,25 +50,24 @@ export default class ClientesAgregar extends BackHandledComponent {
   _validarFormulario() {
     this.setState({
       errores: {
-        errorNombre: validate('userDataRequired', this.state.nombre),
-        errorApPaterno: validate('userDataRequired', this.state.apPaterno),
-        errorApMaterno: validate('userData', this.state.apMaterno),
-        errorTelefono: validate('phone', this.state.telefono),
-        errorCorreo: validate('email', this.state.correo),
-        errorDomicilio: {
-          errorCalle: validate('addressName', this.state.domicilio.calle),
-          errorNoExterno: validate('addressNumber', this.state.domicilio.noExterno),
-          errorNoInterno: validate('addressNumber', this.state.domicilio.noInterno),
-          errorColonia: validate('userDataRequired', this.state.domicilio.colonia),
-          errorMunicipio: validate('addressName', this.state.domicilio.municipio),
-          errorEstado: validate('addressName', this.state.domicilio.estado),
-          errorCp: validate('postalCode', this.state.domicilio.cp),
-          errorReferencia: validate('userData', this.state.domicilio.referencia),
+        nombre: validate('userDataRequired', this.state.cliente.nombre),
+        apPaterno: validate('userDataRequired', this.state.cliente.apPaterno),
+        apMaterno: validate('userData', this.state.cliente.apMaterno),
+        telefono: validate('phone', this.state.cliente.telefono),
+        correo: validate('email', this.state.cliente.correo),
+        domicilio: {
+          calle: validate('addressName', this.state.cliente.domicilio.calle),
+          noExterno: validate('addressNumber', this.state.cliente.domicilio.noExterno),
+          noInterno: validate('addressNumber', this.state.cliente.domicilio.noInterno),
+          colonia: validate('userDataRequired', this.state.cliente.domicilio.colonia),
+          municipio: validate('addressName', this.state.cliente.domicilio.municipio),
+          estado: validate('addressName', this.state.cliente.domicilio.estado),
+          cp: validate('postalCode', this.state.cliente.domicilio.cp),
+          referencia: validate('userData', this.state.cliente.domicilio.referencia),
         }
       }
     }, () => {
       const validezFormulario = this._asignarValidezFormulario(this.state.errores);
-      console.log(validezFormulario)
       if (validezFormulario) {
         this.registrarCliente();
       } else {
@@ -94,19 +94,15 @@ export default class ClientesAgregar extends BackHandledComponent {
   }
 
   registrarCliente() {
-    console.log('entra registrar')
-    const { nombre, apPaterno, apMaterno, correo, contrasena } = this.state;
-    const usuario = { nombre, apPaterno, apMaterno, correo, contrasena };
-    registrarCliente(usuario).then(data => {
-      console.log(data)
+    const { cliente } = this.state;
+    registrarCliente(cliente).then(data => {
       Alert.alert('','Registro realizado con éxito',
         [
-          {text: 'Ok', onPress: () => Actions.login()},
+          {text: 'Ok', onPress: () => Actions.clientesDetalle({cliente: data})},
         ],
         { cancelable: false }
       );
     }).catch(response => {
-      console.log(response)
       if (response.status == 400) {
         Alert.alert('Error en el registro', 'Verifique los datos ingresados', [{
             text: 'Ok'
@@ -132,8 +128,8 @@ export default class ClientesAgregar extends BackHandledComponent {
         <TextField
           autoCapitalize={'words'}
           style={[styles.textInput]}
-          onChangeText={(nombre) => this.setState({nombre})}
-          value={this.state.nombre}
+          onChangeText={(nombre) => this.setState({cliente: {...this.state.cliente, nombre}})}
+          value={this.state.cliente.nombre}
           placeholder={'Nombre(s)'}
           placeholderTextColor={'#999999'}
           ref={input => {this.tb_nombre = input}}
@@ -143,17 +139,17 @@ export default class ClientesAgregar extends BackHandledComponent {
             this.setState({
               errores: {
                 ...this.state.errores,
-                errorNombre: validate('userDataRequired', this.state.nombre),
+                nombre: validate('userDataRequired', this.state.cliente.nombre),
               }
             })
           }}
-          error={this.state.errores.errorNombre}
+          error={this.state.errores.nombre}
         />
         <TextField
           autoCapitalize={'words'}
           style={[styles.textInput]}
-          onChangeText={(apPaterno) => this.setState({apPaterno})}
-          value={this.state.apPaterno}
+          onChangeText={(apPaterno) => this.setState({cliente: {...this.state.cliente, apPaterno}})}
+          value={this.state.cliente.apPaterno}
           placeholder={'Apellido paterno'}
           placeholderTextColor={'#999999'}
           ref={input => {this.tb_apPaterno = input}}
@@ -163,17 +159,17 @@ export default class ClientesAgregar extends BackHandledComponent {
             this.setState({
               errores: {
                 ...this.state.errores,
-                errorApPaterno: validate('userDataRequired', this.state.apPaterno),
+                apPaterno: validate('userDataRequired', this.state.cliente.apPaterno),
               }
             })
           }}
-          error={this.state.errores.errorApPaterno}
+          error={this.state.errores.apPaterno}
         />
         <TextField
           autoCapitalize={'words'}
           style={[styles.textInput]}
-          onChangeText={(apMaterno) => this.setState({apMaterno})}
-          value={this.state.apMaterno}
+          onChangeText={(apMaterno) => this.setState({cliente: {...this.state.cliente, apMaterno}})}
+          value={this.state.cliente.apMaterno}
           placeholder={'Apellido materno'}
           placeholderTextColor={'#999999'}
           ref={input => {this.tb_apMaterno = input}}
@@ -183,18 +179,18 @@ export default class ClientesAgregar extends BackHandledComponent {
             this.setState({
               errores: {
                 ...this.state.errores,
-                errorApMaterno: validate('userData', this.state.apMaterno),
+                apMaterno: validate('userData', this.state.cliente.apMaterno),
               }
             })
           }}
-          error={this.state.errores.errorApMaterno}
+          error={this.state.errores.apMaterno}
         />
         <TextField
           autoCapitalize={'none'}
           keyboardType={'email-address'}
           style={[styles.textInput]}
-          onChangeText={(correo) => {this.setState({correo})}}
-          value={this.state.correo}
+          onChangeText={(correo) => {this.setState({cliente: {...this.state.cliente, correo}})}}
+          value={this.state.cliente.correo}
           placeholder={'Correo'}
           placeholderTextColor={'#999999'}
           ref={input => {this.tb_correo = input}}
@@ -204,18 +200,18 @@ export default class ClientesAgregar extends BackHandledComponent {
             this.setState({
               errores: {
                 ...this.state.errores,
-                errorCorreo: validate('email', this.state.correo),
+                correo: validate('email', this.state.cliente.correo),
               }
             })
           }}
-          error={this.state.errores.errorCorreo}
+          error={this.state.errores.correo}
         />
         <TextField
           autoCapitalize={'none'}
           keyboardType={'phone-pad'}
           style={[styles.textInput]}
-          onChangeText={(telefono) => this.setState({telefono})}
-          value={this.state.telefono}
+          onChangeText={(telefono) => this.setState({cliente: {...this.state.cliente, telefono}})}
+          value={this.state.cliente.telefono}
           placeholder={'Teléfono'}
           placeholderTextColor={'#999999'}
           ref={input => {this.tb_telefono = input}}
@@ -225,19 +221,18 @@ export default class ClientesAgregar extends BackHandledComponent {
             this.setState({
               errores: {
                 ...this.state.errores,
-                errorTelefono: validate('phone', this.state.telefono),
+                telefono: validate('phone', this.state.cliente.telefono),
               }
             })
           }}
-          error={this.state.errores.errorTelefono}
+          error={this.state.errores.telefono}
         />
         <Text>Domicilio</Text>
         <TextField
           autoCapitalize={'words'}
-          keyboardType={'default'}
           style={[styles.textInput]}
-          onChangeText={(calle) => this.setState({domicilio: {...this.state.domicilio, calle}})}
-          value={this.state.calle}
+          onChangeText={(calle) => this.setState({cliente: {...this.state.cliente, domicilio: {...this.state.cliente.domicilio, calle}}})}
+          value={this.state.cliente.domicilio.calle}
           placeholder={'Calle'}
           placeholderTextColor={'#999999'}
           ref={input => {this.tb_calle = input}}
@@ -247,21 +242,21 @@ export default class ClientesAgregar extends BackHandledComponent {
             this.setState({
               errores: {
                 ...this.state.errores,
-                errorDomicilio: {
-                  ...this.state.errores.errorDomicilio,
-                  errorCalle: validate('addressName', this.state.domicilio.calle)
+                domicilio: {
+                  ...this.state.errores.domicilio,
+                  calle: validate('addressName', this.state.cliente.domicilio.calle)
                 },
               }
             })
           }}
-          error={this.state.errores.errorDomicilio.errorCalle}
+          error={this.state.errores.domicilio.calle}
         />
         <TextField
           autoCapitalize={'none'}
           keyboardType={'numeric'}
           style={[styles.textInput, styles.textInputSmall]}
-          onChangeText={(noExterno) => this.setState({domicilio: {...this.state.domicilio, noExterno}})}
-          value={this.state.noExterno}
+          onChangeText={(noExterno) => this.setState({cliente: {...this.state.cliente, domicilio: {...this.state.cliente.domicilio, noExterno}}})}
+          value={this.state.cliente.domicilio.noExterno}
           placeholder={'No. externo'}
           placeholderTextColor={'#999999'}
           ref={input => {this.tb_noExterno = input}}
@@ -271,21 +266,21 @@ export default class ClientesAgregar extends BackHandledComponent {
             this.setState({
               errores: {
                 ...this.state.errores,
-                errorDomicilio: {
-                  ...this.state.errores.errorDomicilio,
-                  errorNoExterno: validate('addressNumber', this.state.domicilio.noExterno)
+                domicilio: {
+                  ...this.state.errores.domicilio,
+                  noExterno: validate('addressNumber', this.state.cliente.domicilio.noExterno)
                 },
               }
             })
           }}
-          error={this.state.errores.errorDomicilio.errorNoExterno}
+          error={this.state.errores.domicilio.noExterno}
         />
         <TextField
           autoCapitalize={'none'}
           keyboardType={'numeric'}
           style={[styles.textInput, styles.textInputSmall]}
-          onChangeText={(noInterno) => this.setState({domicilio: {...this.state.domicilio, noInterno}})}
-          value={this.state.noInterno}
+          onChangeText={(noInterno) => this.setState({cliente: {...this.state.cliente, domicilio: {...this.state.cliente.domicilio, noInterno}}})}
+          value={this.state.cliente.domicilio.noInterno}
           placeholder={'No. interno'}
           placeholderTextColor={'#999999'}
           ref={input => {this.tb_noInterno = input}}
@@ -295,21 +290,20 @@ export default class ClientesAgregar extends BackHandledComponent {
             this.setState({
               errores: {
                 ...this.state.errores,
-                errorDomicilio: {
-                  ...this.state.errores.errorDomicilio,
-                  errorNoInterno: validate('addressNumber', this.state.domicilio.noInterno)
+                domicilio: {
+                  ...this.state.errores.domicilio,
+                  noInterno: validate('addressNumber', this.state.cliente.domicilio.noInterno)
                 },
               }
             })
           }}
-          error={this.state.errores.errorDomicilio.errorNoInterno}
+          error={this.state.errores.domicilio.noInterno}
         />
         <TextField
           autoCapitalize={'words'}
-          keyboardType={'default'}
           style={[styles.textInput, styles.textInputSmall]}
-          onChangeText={(colonia) => this.setState({domicilio: {...this.state.domicilio, colonia}})}
-          value={this.state.colonia}
+          onChangeText={(colonia) => this.setState({cliente: {...this.state.cliente, domicilio: {...this.state.cliente.domicilio, colonia}}})}
+          value={this.state.cliente.domicilio.colonia}
           placeholder={'Colonia'}
           placeholderTextColor={'#999999'}
           ref={input => {this.tb_colonia = input}}
@@ -319,21 +313,20 @@ export default class ClientesAgregar extends BackHandledComponent {
             this.setState({
               errores: {
                 ...this.state.errores,
-                errorDomicilio: {
-                  ...this.state.errores.errorDomicilio,
-                  errorColonia: validate('addressName', this.state.domicilio.colonia)
+                domicilio: {
+                  ...this.state.errores.domicilio,
+                  colonia: validate('addressName', this.state.cliente.domicilio.colonia)
                 },
               }
             })
           }}
-          error={this.state.errores.errorDomicilio.errorColonia}
+          error={this.state.errores.domicilio.colonia}
         />
         <TextField
           autoCapitalize={'words'}
-          keyboardType={'default'}
           style={[styles.textInput, styles.textInputSmall]}
-          onChangeText={(municipio) => this.setState({domicilio: {...this.state.domicilio, municipio}})}
-          value={this.state.municipio}
+          onChangeText={(municipio) => this.setState({cliente: {...this.state.cliente, domicilio: {...this.state.cliente.domicilio, municipio}}})}
+          value={this.state.cliente.domicilio.municipio}
           placeholder={'Municipio'}
           placeholderTextColor={'#999999'}
           ref={input => {this.tb_municipio = input}}
@@ -343,21 +336,20 @@ export default class ClientesAgregar extends BackHandledComponent {
             this.setState({
               errores: {
                 ...this.state.errores,
-                errorDomicilio: {
-                  ...this.state.errores.errorDomicilio,
-                  errorMunicipio: validate('addressName', this.state.domicilio.municipio)
+                domicilio: {
+                  ...this.state.errores.domicilio,
+                  municipio: validate('addressName', this.state.cliente.domicilio.municipio)
                 },
               }
             })
           }}
-          error={this.state.errores.errorDomicilio.errorMunicipio}
+          error={this.state.errores.domicilio.municipio}
         />
         <TextField
           autoCapitalize={'words'}
-          keyboardType={'default'}
           style={[styles.textInput, styles.textInputSmall]}
-          onChangeText={(estado) => this.setState({domicilio: {...this.state.domicilio, estado}})}
-          value={this.state.estado}
+          onChangeText={(estado) => this.setState({cliente: {...this.state.cliente, domicilio: {...this.state.cliente.domicilio, estado}}})}
+          value={this.state.cliente.domicilio.estado}
           placeholder={'Estado'}
           placeholderTextColor={'#999999'}
           ref={input => {this.tb_estado = input}}
@@ -367,21 +359,21 @@ export default class ClientesAgregar extends BackHandledComponent {
             this.setState({
               errores: {
                 ...this.state.errores,
-                errorDomicilio: {
-                  ...this.state.errores.errorDomicilio,
-                  errorEstado: validate('addressName', this.state.domicilio.estado)
+                domicilio: {
+                  ...this.state.errores.domicilio,
+                  estado: validate('addressName', this.state.cliente.domicilio.estado)
                 },
               }
             })
           }}
-          error={this.state.errores.errorDomicilio.errorEstado}
+          error={this.state.errores.domicilio.estado}
         />
         <TextField
           autoCapitalize={'none'}
           keyboardType={'number-pad'}
           style={[styles.textInput, styles.textInputSmall]}
-          onChangeText={(cp) => this.setState({domicilio: {...this.state.domicilio, cp}})}
-          value={this.state.cp}
+          onChangeText={(cp) => this.setState({cliente: {...this.state.cliente, domicilio: {...this.state.cliente.domicilio, cp}}})}
+          value={this.state.cliente.domicilio.cp}
           placeholder={'Código Postal'}
           placeholderTextColor={'#999999'}
           ref={input => {this.tb_cp = input}}
@@ -391,21 +383,20 @@ export default class ClientesAgregar extends BackHandledComponent {
             this.setState({
               errores: {
                 ...this.state.errores,
-                errorDomicilio: {
-                  ...this.state.errores.errorDomicilio,
-                  errorCp: validate('postalCode', this.state.domicilio.cp)
+                domicilio: {
+                  ...this.state.errores.domicilio,
+                  cp: validate('postalCode', this.state.cliente.domicilio.cp)
                 },
               }
             })
           }}
-          error={this.state.errores.errorDomicilio.errorCp}
+          error={this.state.errores.domicilio.cp}
         />
         <TextField
           autoCapitalize={'none'}
-          keyboardType={'default'}
           style={[styles.textInput, styles.textInputSmall]}
-          onChangeText={(referencia) => this.setState({domicilio: {...this.state.domicilio, referencia}})}
-          value={this.state.referencia}
+          onChangeText={(referencia) => this.setState({cliente: {...this.state.cliente, domicilio: {...this.state.cliente.domicilio, referencia}}})}
+          value={this.state.cliente.domicilio.referencia}
           placeholder={'Referencia'}
           placeholderTextColor={'#999999'}
           ref={input => {this.tb_referencia = input}}
@@ -415,14 +406,14 @@ export default class ClientesAgregar extends BackHandledComponent {
             this.setState({
               errores: {
                 ...this.state.errores,
-                errorDomicilio: {
-                  ...this.state.errores.errorDomicilio,
-                  errorReferencia: validate('userData', this.state.domicilio.referencia)
+                domicilio: {
+                  ...this.state.errores.domicilio,
+                  referencia: validate('userData', this.state.cliente.domicilio.referencia)
                 },
               }
             })
           }}
-          error={this.state.errores.errorDomicilio.referencia}
+          error={this.state.errores.domicilio.referencia}
         />
         <TouchableOpacity onPress={() => {this._validarFormulario()}} style={styles.button}>
           <Text style={styles.textButton}>
