@@ -38,7 +38,7 @@ class ProductosModificar extends Component {
         this.setState({
             errores: {
                 nombre: validate('notEmpty', this.state.producto.nombre),
-                precio: validate('price', this.state.producto.precio),
+                precio: validate('price', this.state.producto.precio.toString()),
                 descripcion: validate('notEmpty', this.state.producto.descripcion),
                 imagen: validate('notEmpty', this.state.producto.imagen),
             }
@@ -70,21 +70,11 @@ class ProductosModificar extends Component {
         console.log(this.state.producto);
         const body = this.state.producto;
         body.precio = parseFloat(body.precio);
+        if (body.imagen.substring(0, 4) == 'http') delete body.imagen
         const id = body.id;
         delete body.id;
         ModificarProductoRequest(id, body).then(response => {
             Actions.popTo('main')
-            setTimeout(() => {
-                Actions.refresh({
-                    updates: {
-                        accion: 'ModificarProducto',
-                        valor: {
-                            ...this.state.producto,
-                            imagen: `data:image/jpeg;base64,${this.state.producto.imagen}`                        
-                        }
-                    }
-                })
-            }, 0)
         }).catch(err => {
             console.log(err);
         })
@@ -114,7 +104,6 @@ class ProductosModificar extends Component {
             cropping: true,
             includeBase64: true
         }).then(image => {
-            console.log(image);
             this.setState({
                 producto: {
                     ...this.state.producto,
@@ -122,6 +111,15 @@ class ProductosModificar extends Component {
                 }
             });
         }).catch(err => console.log(err));
+    }
+
+    obtenerUri = (imagen) => {
+        if (!imagen) return null;
+        if (imagen.substring(0, 4) == 'http') {
+            return imagen;
+        } else {
+            return `data:image/jpeg;base64,${imagen}`
+        }
     }
 
     _renderImagePicker = () => (
@@ -144,7 +142,7 @@ class ProductosModificar extends Component {
         <View style={{flex: 0.5, marginTop: 20, flexDirection: 'row'}}>
             <View style={{flex: 0.7, justifyContent: 'center', alignItems: 'center'}}>
                 <Image
-                    source={{uri: this.state.producto.imagen ? `data:image/jpeg;base64,${this.state.producto.imagen}` : 'https://via.placeholder.com/2000x3000?text=Placeholder'}}
+                    source={{uri: this.state.producto.imagen ? this.obtenerUri(this.state.producto.imagen) : 'https://via.placeholder.com/2000x3000?text=Placeholder'}}
                     style={{width: '100%', aspectRatio: 1, borderRadius: 3}} 
                     resizeMode='cover'
                     resizeMethod='scale'/>
@@ -196,7 +194,7 @@ class ProductosModificar extends Component {
                         <TextField
                             style={styles.textInput}
                             containerStyle={{width: '100%'}}
-                            value={this.state.producto.precio}
+                            value={this.state.producto.precio.toString()}
                             onChangeText={(precio) => {
                                 this.setState({
                                     producto: {
@@ -245,7 +243,7 @@ class ProductosModificar extends Component {
                             }}
                             error={this.state.errores.descripcion}/>
                         <TouchableOpacity style={styles.boton} onPress={this._validarFormulario}>
-                            <Text style={{color: Colors.white, fontSize: 16}}>Agregar</Text>
+                            <Text style={{color: Colors.white, fontSize: 16}}>Aceptar</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
