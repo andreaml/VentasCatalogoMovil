@@ -6,24 +6,56 @@ import ReactNativeParallaxHeader from 'react-native-parallax-header';
 import Colors from '../../../assets/Colors'
 import {DELETE_Productos as deleteProducto} from '../../../api'
 
+/**
+ * @typedef Props
+ */
 type Props = {
+    /** 
+     * Id del producto
+     */
     id: number,
+
+    /** 
+     * Nombre del producto
+     */
     nombre: string,
+
+    /** 
+     * Descripcion del producto
+     */
     descripcion: string,
+
+    /** 
+     * Precio del producto
+     */
     precio: number,
+
+    /** 
+     * Imagen del producto
+     */
     imagen?: string
 }
 
 class ProductosDetalle extends Component<Props> {
     constructor(props) {
-        super(props);   
+        super(props);
     }
 
+    /**
+     * @function handleOnEditPress
+     * @access private
+     * @description Maneja el evento de presionar el botón editar
+     */
     handleOnEditPress = () => {
         const { id, nombre, descripcion, precio, imagen } = this.props;
         Actions.productosModificar({ id, nombre, descripcion, precio, imagen });
     }
 
+    /**
+     * @function handleOnDeletePress
+     * @access private
+     * @description Maneja el evento de presionar el botón eliminar
+     */
     handleOnDeletePress = () => {
         Alert.alert(
             'Eliminar Producto',
@@ -36,6 +68,11 @@ class ProductosDetalle extends Component<Props> {
         )
     }
 
+    /**
+     * @function deleteProducto
+     * @access private
+     * @description Envía la solicitud al servidor de eliminar un producto, después cierra la vista
+     */
     deleteProducto = () => {
         deleteProducto(this.props.id).then(() => {
             Actions.pop({
@@ -49,6 +86,11 @@ class ProductosDetalle extends Component<Props> {
         }).catch(err => console.log(err));
     }
 
+    /**
+     * @function renderContent
+     * @access private
+     * @description Renderiza el contenido de la vista.
+     */
     renderContent = () => (
         <View style={{flex: 1, paddingTop: 10, paddingHorizontal: 15, paddingBottom: 15, minHeight: Dimensions.get('screen').height}}>
             <Text style={{fontSize: 28}}>{this.props.nombre || "Nombre del producto"}</Text>
@@ -76,6 +118,11 @@ class ProductosDetalle extends Component<Props> {
         </View>
     )
 
+    /**
+     * @function renderNavBar
+     * @access private
+     * @description Renderiza la cabecera de la vista.
+     */
     renderNavBar = () => (
         <View style={{flex: 1, flexDirection: 'row'}}>
             <TouchableOpacity style={{padding: 12.5}} onPress={() => Actions.pop()}>
@@ -126,4 +173,7 @@ const styles = StyleSheet.create({
     },
 })
 
+/**
+ * @exports ProductosDetalle
+ */
 export default ProductosDetalle;

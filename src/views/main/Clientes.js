@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { View, FlatList, ActivityIndicator, TouchableOpacity, StyleSheet } from 'react-native';
-import BackHandledComponent from '../../components/BackHandledComponent';
 import ListItem_Clientes from '../../components/ListItem_Clientes';
 import Colors from '../../assets/Colors';
 import { GET_Clientes as getClientes } from '../../api';
@@ -12,7 +11,7 @@ import { Actions } from 'react-native-router-flux';
  * Vista para mostrar lista de clientes
  * @class
  */
-export default class Clientes extends BackHandledComponent {
+export default class Clientes extends Component {
   constructor(props) {
     super(props);
     this.state = {

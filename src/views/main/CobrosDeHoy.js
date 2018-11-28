@@ -1,10 +1,9 @@
-import React from 'react';
+import React, { Component } from 'react';
 import {View, FlatList, ActivityIndicator, TouchableOpacity } from 'react-native';
-import BackHandledComponent from '../../components/BackHandledComponent';
 import ListItem_CobrosDeHoy from '../../components/ListItem_CobrosDeHoy'
 import Colors from '../../assets/Colors';
 
-export default class CobrosDeHoy extends BackHandledComponent {
+export default class CobrosDeHoy extends Component {
     constructor(props) {
         super(props);
         this.state = {
