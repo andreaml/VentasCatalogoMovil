@@ -9,6 +9,10 @@ import validate from '../../../utils/validationWrapper';
 import { Actions } from 'react-native-router-flux';
 import { POST_Productos as AgregarProductoRequest } from '../../../api'
 
+/**
+ * @class ProductosAgregar
+ * @description Vista para agregar un producto
+ */
 class ProductosAgregar extends Component {
 
     state = {
@@ -27,6 +31,11 @@ class ProductosAgregar extends Component {
     }
 
 
+    /**
+     * @function _validarFormulario
+     * @access private
+     * @description Valida el formulario completo antes de enviar la solicitud al servidor
+     */
     _validarFormulario = () => {
         this.setState({
             errores: {
@@ -38,6 +47,11 @@ class ProductosAgregar extends Component {
         }, this._asignarValidezFormulario);
     }
     
+    /**
+     * @function _asignarValidezFormulario
+     * @access private
+     * @description Revisa si, después de validar el formulario, hay algún error de validación
+     */
     _asignarValidezFormulario = () => {
         const { errores } = this.state;
         let validezFormulario = true;
@@ -59,6 +73,11 @@ class ProductosAgregar extends Component {
         }
     }
 
+    /**
+     * @function agregarProducto
+     * @access private
+     * @description Envía la solicitud de agregar producto al servidor y cierra la vista
+     */
     agregarProducto = () => {
         console.log(this.state.producto);
         AgregarProductoRequest({
@@ -80,6 +99,11 @@ class ProductosAgregar extends Component {
         })
     }
 
+    /**
+     * @function onCameraButtonPress
+     * @access private
+     * @description Inicia la vista de la cámara, con todo lo que implique por parte del sistema operativo.
+     */
     onCameraButtonPress = () => {
         ImagePicker.openCamera({
             width: 400,
@@ -97,6 +121,11 @@ class ProductosAgregar extends Component {
         }).catch(err => console.log(err));
     }
 
+    /**
+     * @function onGalleryButtonPress
+     * @access private
+     * @description Inicia la vista de la galería, con todo lo que implique por parte del sistema operativo.
+     */
     onGalleryButtonPress = () => {
         ImagePicker.openPicker({
             width: 400,
@@ -114,6 +143,11 @@ class ProductosAgregar extends Component {
         }).catch(err => console.log(err));
     }
 
+    /**
+     * @function _renderImagePicker
+     * @access private
+     * @description Renderiza el componente para seleccionar una imagen en la pantalla. Se utiliza cuando no hay imagen seleccionada
+     */
     _renderImagePicker = () => (
         <View style={{flex: 0.5, marginTop: 20}}>
             <View style={{flex: 0.3, justifyContent: 'center', alignItems: 'center'}}>
@@ -130,6 +164,11 @@ class ProductosAgregar extends Component {
         </View> 
     )
 
+    /**
+     * @function _renderCurrentImage
+     * @access private
+     * @description Renderiza el componente para ver y seleccionar una imagen en la pantalla. Se utiliza cuando hay imagen seleccionada
+     */
     _renderCurrentImage = () => (
         <View style={{flex: 0.5, marginTop: 20, flexDirection: 'row'}}>
             <View style={{flex: 0.7, justifyContent: 'center', alignItems: 'center'}}>
