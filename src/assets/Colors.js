@@ -2,7 +2,7 @@ export default {
     primary: '#4472c4',
     secondary: 'slategray',
     success: 'seagreen',
-    danger: 'crimson',
+    danger: 'rgba(231,76,60,1)',
     warning: 'gold',
     info: 'lightseagreen',
     light: 'ghostwhite',

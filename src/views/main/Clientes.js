@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { View, FlatList, ActivityIndicator, TouchableOpacity, StyleSheet } from 'react-native';
-import BackHandledComponent from '../../components/BackHandledComponent';
 import ListItem_Clientes from '../../components/ListItem_Clientes';
 import Colors from '../../assets/Colors';
 import { GET_Clientes as getClientes } from '../../api';
@@ -8,7 +7,11 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import ActionButton from 'react-native-action-button';
 import { Actions } from 'react-native-router-flux';
 
-export default class Clientes extends BackHandledComponent {
+/**
+ * Vista para mostrar lista de clientes
+ * @class
+ */
+export default class Clientes extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -25,6 +28,45 @@ export default class Clientes extends BackHandledComponent {
     this.handleOnRefresh();
   }
 
+  AgregarElemento(newItem) {
+    this.setState({
+      clientes: [
+        ...this.state.clientes,
+        newItem
+      ]
+    });
+  }
+
+  EliminarElemento(id) {
+    const arrayTemp = this.state.clientes;
+    arrayTemp.find((element, index, array) => {
+      if (element.id === id) {
+        array.splice(index, 1);
+        return true;
+      }
+    });
+    this.setState({
+      clientes: arrayTemp
+    });
+  }
+
+  ModificarElemento(id, updatedItem) {
+    const arrayTemp = this.state.clientes;
+    arrayTemp.find((element, index, array) => {
+      if (element.id === id) {
+        array[index] = updatedItem;
+        return true;
+      }
+    });
+    this.setState({
+      clientes: arrayTemp
+    });
+  }
+
+  /** @function handleOnRefresh
+   * @access private
+   * @description Se manda a llamar cuando se refresca la vista o se carga por primera vez. Restablece el state a configuración inicial. Ejecuta función de petición GET para obtener clientes paginados.
+   */
   handleOnRefresh = () => {
     getClientes(1, this.state.perPage).then(result => {
       this.setState({
@@ -45,6 +87,10 @@ export default class Clientes extends BackHandledComponent {
     })
   }
 
+  /** @function handleOnEndReached
+   * @access private
+   * @description Se manda a llamar cuando al hacer scroll hacia abajo se alcanza el fin de la vista. Modifica el state para aumentar la paginación. Ejecuta función de petición GET para obtener clientes paginados.
+   */
   handleOnEndReached = (distanceFromEnd) => {
     if (this.state.page < this.state.pages) {
       getClientes(this.state.page + 1, this.state.perPage).then(result => {
@@ -71,7 +117,7 @@ export default class Clientes extends BackHandledComponent {
           ref={list => this.list = list}
           data={this.state.clientes}
           renderItem={({item}) => (
-            <TouchableOpacity onPress={() => console.warn("presionado: " + item.id)}>
+            <TouchableOpacity onPress={() => {Actions.clientesDetalle({cliente: item})}}>
               <ListItem_Clientes style={{flex: 1}} {...item} />
             </TouchableOpacity>
           )}
@@ -96,7 +142,7 @@ export default class Clientes extends BackHandledComponent {
           refreshing={this.state.refreshing}
         />
         <ActionButton 
-          buttonColor="rgba(231,76,60,1)"
+          buttonColor={Colors.info}
           onPress={() => { Actions.clientesAgregar() }}
         >
         </ActionButton>

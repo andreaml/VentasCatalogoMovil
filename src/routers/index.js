@@ -7,7 +7,7 @@ import LoginRouter from './LoginRouter'
 import RegistroRouter from './RegistroRouter'
 import MainRouter from './MainRouter'
 import EjemploRouter from './EjemploRouter'
-import { ClientesAgregar } from './ClientesRouter'
+import { ClientesAgregar, ClientesDetalle, ClientesEditar } from './ClientesRouter'
 import { ProductosDetalle, ProductosAgregar, ProductosModificar } from './ProductosRouter'
 
 const Router = () => {
@@ -19,6 +19,8 @@ const Router = () => {
             {MainRouter}
             {EjemploRouter}
             {ClientesAgregar}
+            {ClientesDetalle}
+            {ClientesEditar}
             {ProductosDetalle}
             {ProductosAgregar}
             {ProductosModificar}

@@ -1,6 +1,5 @@
-import React from 'react';
-import {View, FlatList, ActivityIndicator, TouchableOpacity, Text } from 'react-native';
-import BackHandledComponent from '../../components/BackHandledComponent';
+import React, { Component } from 'react';
+import {View, FlatList, ActivityIndicator } from 'react-native';
 import ListItem_Productos from '../../components/ListItem_Productos'
 import Colors from '../../assets/Colors';
 import ActionButton from 'react-native-action-button';
@@ -11,7 +10,7 @@ import { Actions } from 'react-native-router-flux'
  * @class Productos
  * @description Vista de los productos utilizada dentro del tabView
  */
-export default class Productos extends BackHandledComponent {
+export default class Productos extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -23,6 +22,10 @@ export default class Productos extends BackHandledComponent {
             refreshing: false
         }
     }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        return this.state.loading;
+      }
 
     componentDidMount() {
         // Obtenemos la primer página de elementos al momento de cargar el componente

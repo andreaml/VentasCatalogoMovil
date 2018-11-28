@@ -35,14 +35,8 @@ class BottomNavigation extends Component {
         this.state = {
             updates: {
                 productos: 123, // Controla eliminados y modificados
-            },
-            backToExit: true,
-            title: 'Cobros de hoy'
+            }
         }
-    }
-    
-    componentDidMount() {
-        this.refresh();
     }
 
     componentWillReceiveProps(nextProps) {
@@ -67,17 +61,11 @@ class BottomNavigation extends Component {
                     // this.productos.ModificarElemento(nextProps.updates.productos.add)
                     break
                 case 'EliminarCliente': 
-                    // this.productos.EliminarElemento(nextProps.updates.productos.eliminar)
+                    this.productos.EliminarElemento(nextProps.updates.valor)
                     break
             }
             Actions.refresh({updates: null});
         }
-    }
-
-    refresh = (title = 'Cobros de hoy', backToExit = true) => {
-        this.setState({backToExit, title}, () => {
-            Actions.refresh({title: this.state.title});
-        })
     }
 
     TabBar = CreateTabs({
@@ -87,10 +75,6 @@ class BottomNavigation extends Component {
                 tabBarIcon: () => (
                     <Icon name='store' color='white' size={24}/>
                 ),
-                tabBarOnPress: ({defaultHandler}) => {
-                    this.refresh('Productos', false);
-                    defaultHandler();
-                },
                 tabBarColor: Colors.success,                
             },
         },
@@ -100,10 +84,6 @@ class BottomNavigation extends Component {
                 tabBarIcon: () => (
                     <Icon name='people' color='white' size={24}/>
                 ),
-                tabBarOnPress: ({defaultHandler}) => {
-                    this.refresh('Clientes', false);
-                    defaultHandler();
-                },
                 tabBarColor: Colors.info,
             }
         },
@@ -113,10 +93,6 @@ class BottomNavigation extends Component {
                 tabBarIcon: () => (
                     <Icon name='today' color='white' size={24}/>
                 ),
-                tabBarOnPress: ({defaultHandler}) => {
-                    this.refresh('Cobros de hoy', true);
-                    defaultHandler();
-                },
                 tabBarColor: Colors.primary,
             }
         },
@@ -126,47 +102,22 @@ class BottomNavigation extends Component {
                 tabBarIcon: () => (
                     <Icon name='attach-money' color='white' size={24}/>
                 ),
-                tabBarOnPress: ({defaultHandler}) => {
-                    this.refresh('Ventas', false);
-                    defaultHandler();
-                },
                 tabBarColor: Colors.warning,
             }
         },
         Carrito: {
             screen: Placeholder,
             navigationOptions: {
-                // tabBarLabel: 'Carrito',
                 tabBarIcon: () => (
                     <Icon name='shopping-cart' color='white' size={24}/>
                 ),
-                tabBarOnPress: ({defaultHandler}) => {
-                    this.refresh('Carrito', false);
-                    defaultHandler();
-                },
                 tabBarColor: Colors.danger,
             }
         }
     }, {
         initialRouteName: "Hoy",
+        backBehavior: 'none'
     })
-
-    componentDidMount() {
-        // console.warn("Elemento Montado")
-        this.backHandler = BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
-    }
-
-    componentWillUnmount() {
-        this.backHandler.remove(); 
-    }
-
-    handleBackPress = () => {
-        if (this.state.backToExit) {
-            BackHandler.exitApp();
-        } else {
-            this.refresh('Cobros de hoy', true)
-        }
-    }
 
     render() {
         return (
