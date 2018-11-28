@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import Snackbar from 'react-native-snackbar';
-import Carrito from '../utils/Carrito';
+import CarritoHandler from '../utils/CarritoHandler';
 
 type Props = {
   id: number,
@@ -15,7 +15,7 @@ type Props = {
 export default class ListItem_Productos extends PureComponent<Props> {
   constructor(props) {
     super(props);
-    this.carrito = new Carrito();
+    this.carrito = new CarritoHandler();
   }
 
   handleAddToCartPress = () => {

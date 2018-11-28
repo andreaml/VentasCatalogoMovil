@@ -4,7 +4,7 @@ import { AsyncStorage } from "react-native";
  * Clase para manejo de carrito de manera global mediante el AsyncStorage
  * @class
  */
-export default class Carrito {
+export default class CarritoHandler {
   /**
    * @function vaciar
    * @access public
@@ -25,8 +25,14 @@ export default class Carrito {
   obtenerProductos = () => {
     return new Promise((res) => {
       AsyncStorage.getItem('carrito', (err, productos) => {
+        //{{BORRAR}}
+        productos = JSON.parse(productos).map((producto) => {
+          const subtotal = (producto.precio * producto.cantidad);
+          return {...producto, subtotal};
+        })
         //Se convierte string a objeto (en este caso devuelve un array de objetos)
-        res(JSON.parse(productos));
+        // res(JSON.parse(productos));
+        res((productos));
       });
     })
   }
@@ -53,6 +59,39 @@ export default class Carrito {
   }
 
   /**
+   * @function obtenerTotal
+   * @access public
+   * @description Se recorre array de productos para realizar sumatoria de subtotales.
+   * @returns {Promise} Promesa con el total a pagar de la venta.
+   */
+  obtenerTotal = () => {
+    return new Promise((res, rej) => {
+      this.obtenerProductos().then((productos) =>{
+        if (productos && productos.length)
+          res(this._objetoCalcularTotal(productos, 'subtotal'));
+        else
+          rej(0);
+      })
+    });
+  }
+
+  /**
+   * @function _objetoCalcularTotal
+   * @access private
+   * @param {Array} arrayObjetos - Array de objetos para realizar sumatoria
+   * @param {string} propiedad - Nombre de propiedad para realizar sumatoria
+   * @description Se recorre array de objetos para realizar sumatoria de propiedad establecida.
+   * @returns {number} Resultado de sumatoria.
+   */
+  _objetoCalcularTotal = (arrayObjetos, propiedad) => {
+    let subtotal = arrayObjetos.map((objeto) => {
+      return objeto[propiedad];
+    });
+    let total = subtotal.reduce((prev, current) => parseFloat(prev) + parseFloat(current), 0);
+      return total;
+  }
+
+  /**
    * @function agregarProducto
    * @access public
    * @param {Object} producto - Objeto de producto para agregar al carrito
@@ -61,7 +100,8 @@ export default class Carrito {
    */
   agregarProducto = (producto, cantidad = 1) => {
     return new Promise((res, rej) => {
-      const nuevoProducto = {...producto, cantidad};
+      const subtotal = (producto.precio * cantidad);
+      const nuevoProducto = {...producto, cantidad, subtotal};
       this.obtenerProductos().then((productos) => {
         if (productos && productos.length) {
           this._agregarProducto(productos, nuevoProducto).then(() => {
