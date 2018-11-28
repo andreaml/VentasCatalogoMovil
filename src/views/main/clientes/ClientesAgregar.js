@@ -117,7 +117,10 @@ export default class ClientesAgregar extends BackHandledComponent {
     registrarCliente(cliente).then(data => {
       Alert.alert('','Registro realizado con éxito',
         [
-          {text: 'Ok', onPress: () => Actions.clientesDetalle({cliente: data})},
+          {text: 'Ok', onPress: () => {
+            Actions.pop();
+            Actions.clientesDetalle({cliente: data})},
+          } 
         ],
         { cancelable: false }
       );

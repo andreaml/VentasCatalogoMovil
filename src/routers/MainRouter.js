@@ -67,7 +67,7 @@ class BottomNavigation extends Component {
                     // this.productos.ModificarElemento(nextProps.updates.productos.add)
                     break
                 case 'EliminarCliente': 
-                    // this.productos.EliminarElemento(nextProps.updates.productos.eliminar)
+                    this.productos.EliminarElemento(nextProps.updates.valor)
                     break
             }
             Actions.refresh({updates: null});

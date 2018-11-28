@@ -121,7 +121,10 @@ export default class ClientesEditar extends BackHandledComponent {
     editarCliente(id, cliente).then(() => {
       Alert.alert('','Cambios guardados con éxito',
         [
-          {text: 'Ok', onPress: () => Actions.clientesDetalle({cliente: {...cliente, id}})},
+          {text: 'Ok', onPress: () => {
+            Actions.pop();
+            Actions.clientesDetalle({cliente: {...cliente, id}})}
+          }
         ],
         { cancelable: false }
       );

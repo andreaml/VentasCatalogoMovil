@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { Alert, View, StyleSheet } from 'react-native';
 import BackHandledComponent from '../../../components/BackHandledComponent';
-import { GET_Clientes as getClientes } from '../../../api';
+import { DELETE_Clientes as eliminarCliente } from '../../../api';
 import ActionButton from 'react-native-action-button';
 import { Actions } from 'react-native-router-flux';
 import Colors from '../../../assets/Colors';
@@ -17,6 +17,7 @@ export default class ClientesDetalle extends BackHandledComponent {
   constructor(props) {
     super(props);
     /** @private */
+    console.log(props)
     this.state = {
       cliente: props.cliente
     }
@@ -60,6 +61,42 @@ ${(referencia) ? 'Referencia: ' + referencia : ''}`;
     return '';
   }
 
+  handleOnDeletePress = () => {
+    Alert.alert(
+      'Eliminar cliente',
+      '¿Está seguro de que desea eliminar este cliente?',
+      [
+        {text: 'Cancelar', style: 'cancel'},
+        {text: 'Eliminar', style: 'destructive', onPress: this.deleteCliente}
+      ],
+      { cancelable: false }
+    );
+  }
+
+  deleteCliente = () => {
+    const { id } = this.state.cliente;
+    eliminarCliente(id).then(() => {
+        Actions.pop({
+            refresh: {
+                updates: {
+                    accion: 'EliminarCliente',
+                    valor: id
+                }
+            }
+        });
+    }).catch(err => {
+      console.log(err)
+      Alert.alert(
+        'Error',
+        'El cliente no se puede eliminar, inténtelo más tarde por favor.',
+        [
+          {text: 'Ok'},
+        ],
+        { cancelable: false }
+      );
+    });
+  }
+
   render() {
     const { nombre, apPaterno, apMaterno, telefono, correo, domicilio } = this.state.cliente;
     return (
@@ -99,22 +136,17 @@ ${(referencia) ? 'Referencia: ' + referencia : ''}`;
           <ActionButton.Item 
             buttonColor={Colors.primary} 
             title="Editar" 
-            onPress={() => { Actions.clientesEditar({cliente: this.state.cliente}) }}
+            onPress={() => { 
+              Actions.pop();
+              Actions.clientesEditar({cliente: this.state.cliente}) 
+            }}
           >
             <Icon name="edit" style={styles.actionButtonIcon} />
           </ActionButton.Item>
           <ActionButton.Item 
             buttonColor={Colors.danger} 
             title="Eliminar" 
-            onPress={() => {
-              Alert.alert('Eliminar cliente','¿Está seguro de que desea eliminar este cliente?',
-                [
-                  {text: 'Sí', onPress: () => Actions.clientesDetalle({cliente: data})},
-                  {text: 'No'},
-                ],
-                { cancelable: true }
-              );
-            }}
+            onPress={this.handleOnDeletePress}
           >
             <Icon name="delete" style={styles.actionButtonIcon} />
           </ActionButton.Item>

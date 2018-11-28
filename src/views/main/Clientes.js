@@ -29,8 +29,42 @@ export default class Clientes extends BackHandledComponent {
     this.handleOnRefresh();
   }
 
-  /**
-   * @function handleOnRefresh
+  AgregarElemento(newItem) {
+    this.setState({
+      clientes: [
+        ...this.state.clientes,
+        newItem
+      ]
+    });
+  }
+
+  EliminarElemento(id) {
+    const arrayTemp = this.state.clientes;
+    arrayTemp.find((element, index, array) => {
+      if (element.id === id) {
+        array.splice(index, 1);
+        return true;
+      }
+    });
+    this.setState({
+      clientes: arrayTemp
+    });
+  }
+
+  ModificarElemento(id, updatedItem) {
+    const arrayTemp = this.state.clientes;
+    arrayTemp.find((element, index, array) => {
+      if (element.id === id) {
+        array[index] = updatedItem;
+        return true;
+      }
+    });
+    this.setState({
+      clientes: arrayTemp
+    });
+  }
+
+  /** @function handleOnRefresh
    * @access private
    * @description Se manda a llamar cuando se refresca la vista o se carga por primera vez. Restablece el state a configuración inicial. Ejecuta función de petición GET para obtener clientes paginados.
    */
@@ -54,8 +88,7 @@ export default class Clientes extends BackHandledComponent {
     })
   }
 
-  /**
-   * @function handleOnEndReached
+  /** @function handleOnEndReached
    * @access private
    * @description Se manda a llamar cuando al hacer scroll hacia abajo se alcanza el fin de la vista. Modifica el state para aumentar la paginación. Ejecuta función de petición GET para obtener clientes paginados.
    */
