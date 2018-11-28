@@ -4,24 +4,43 @@ import { Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import Color from '../../../assets/Colors';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { POST_Clientes as registrarCliente } from '../../../api';
+import { PUT_Clientes as editarCliente } from '../../../api';
 import TextField from '../../../components/TextField';
 import validate from '../../../utils/validationWrapper';
 import Colors from '../../../assets/Colors';
 
 /**
- * Vista para agregar un cliente
+ * Vista para modificar un cliente
  * @class
  */
-export default class ClientesAgregar extends BackHandledComponent {
-  state = {
-    cliente: {
-      nombre: '',
-      apPaterno: '',
-      apMaterno: '',
-      telefono: '',
-      correo: '',
-      domicilio: {
+export default class ClientesEditar extends BackHandledComponent {
+  /** @constructor */
+  constructor(props) {
+    super(props);
+    const { 
+      nombre, 
+      apPaterno, 
+      apMaterno, 
+      telefono, 
+      correo, 
+      domicilio: { calle, noExterno, noInterno, colonia, municipio, estado, cp, referencia }
+    } = this.props.cliente;
+    this.state = {
+      cliente: { 
+        nombre,
+        apPaterno,
+        apMaterno,
+        telefono,
+        correo,
+        domicilio: { calle, noExterno, noInterno, colonia, municipio, estado, cp, referencia }
+      },
+      errores: {
+        nombre: '',
+        apPaterno: '',
+        apMaterno: '',
+        telefono: '',
+        correo: '',
+        domicilio: {
           calle: '',
           noExterno: '',
           noInterno: '',
@@ -30,30 +49,14 @@ export default class ClientesAgregar extends BackHandledComponent {
           estado: '',
           cp: '',
           referencia: '',
-      }
-    },
-    errores: {
-      nombre: '',
-      apPaterno: '',
-      apMaterno: '',
-      telefono: '',
-      correo: '',
-      domicilio: {
-        calle: '',
-        noExterno: '',
-        noInterno: '',
-        colonia: '',
-        municipio: '',
-        estado: '',
-        cp: '',
-        referencia: '',
-      }
-    },
+        }
+      },
+    }
   }
 
   /** @function _validarFormulario
    * @access private
-   * @description Función para ejecutar la validación del formulario, y actualiza el state de los errores. Si el formulario es válido, se ejecta función para registrar cliente, si no, se lanza un alert.
+   * @description Función para ejecutar la validación del formulario, y actualiza el state de los errores. Si el formulario es válido, se ejecta función para modificar cliente, si no, se lanza un alert.
    */
   _validarFormulario() {
     this.setState({
@@ -77,9 +80,9 @@ export default class ClientesAgregar extends BackHandledComponent {
     }, () => {
       const validezFormulario = this._asignarValidezFormulario(this.state.errores);
       if (validezFormulario) {
-        this.registrarCliente();
+        this.editarCliente();
       } else {
-        Alert.alert('Error en el registro','Verifique los datos ingresados, por favor.',
+        Alert.alert('Error en la edición','Verifique los datos ingresados, por favor.',
           [
             {text: 'Ok'},
           ],
@@ -108,31 +111,32 @@ export default class ClientesAgregar extends BackHandledComponent {
   }
 
   /**
-   * @function registrarCliente
+   * @function editarCliente
    * @access private
-   * @description Se ejecuta función de petición POST para registrar un cliente. Al finalizar la petición, se muestran alerts para retroalimentar al usuario.
+   * @description Se ejecuta función de petición POST para modificar un cliente. Al finalizar la petición, se muestran alerts para retroalimentar al usuario.
    */
-  registrarCliente() {
+  editarCliente() {
     const { cliente } = this.state;
-    registrarCliente(cliente).then(data => {
-      Alert.alert('','Registro realizado con éxito',
+    const { id } = this.props.cliente;
+    editarCliente(id, cliente).then(() => {
+      Alert.alert('','Cambios guardados con éxito',
         [
           {text: 'Ok', onPress: () => {
             Actions.pop();
-            Actions.clientesDetalle({cliente: data})},
-          } 
+            Actions.clientesDetalle({cliente: {...cliente, id}})}
+          }
         ],
         { cancelable: false }
       );
     }).catch(response => {
       if (response.status == 400) {
-        Alert.alert('Error en el registro', 'Verifique los datos ingresados', [{
+        Alert.alert('Error al guardar', 'Verifique los datos ingresados', [{
             text: 'Ok'
           }], {
             cancelable: false
         });
       } else {
-        Alert.alert('Error en el registro', 'No se puede registrar en este momento, inténtelo mas tarde', [{
+        Alert.alert('Error al guardar', 'No se puede editar en este momento, inténtelo mas tarde', [{
             text: 'Ok'
           }], {
             cancelable: false
@@ -439,7 +443,7 @@ export default class ClientesAgregar extends BackHandledComponent {
         />
         <TouchableOpacity onPress={() => {this._validarFormulario()}} style={styles.button}>
           <Text style={styles.textButton}>
-            Registrar
+            Guardar cambios
           </Text>
         </TouchableOpacity>
       </KeyboardAwareScrollView>
