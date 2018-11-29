@@ -11,9 +11,30 @@ export default class CarritoHandler {
    * @description Se setea variable carrito del AsyncStorage como array vacío.
    */
   vaciar = () => {
-    AsyncStorage.setItem('carrito', JSON.stringify([]), () => {
-      this.obtenerProductos().then((items) => console.log(items))
-    });
+    return new Promise((res, rej) => {
+      AsyncStorage.setItem('carrito', JSON.stringify([]), (err) => {
+        if (err)
+          rej(err);
+        else
+          res();
+      });
+    })
+  }
+
+  eliminarProducto = (idProducto) => {
+    return new Promise((res, rej) => {
+      this.obtenerProductos().then((productos) =>{
+        const productosLimpio = productos.filter(({id}) => id != idProducto);
+        AsyncStorage.setItem('carrito', JSON.stringify(productosLimpio), (err) => {
+          if (err)
+            rej();
+          else
+            res();
+        });
+      }).catch(() => {
+        rej();          
+      })
+    })
   }
 
   /**
@@ -23,16 +44,14 @@ export default class CarritoHandler {
    * @returns {Promise} Promesa con array de productos contenidos en variable carrito del AsyncStorage.
    */
   obtenerProductos = () => {
-    return new Promise((res) => {
-      AsyncStorage.getItem('carrito', (err, productos) => {
-        //{{BORRAR}}
-        productos = JSON.parse(productos).map((producto) => {
-          const subtotal = (producto.precio * producto.cantidad);
-          return {...producto, subtotal};
-        })
+    return new Promise((res, rej) => {
+      AsyncStorage.getItem('carrito', (err, carrito) => {
         //Se convierte string a objeto (en este caso devuelve un array de objetos)
-        // res(JSON.parse(productos));
-        res((productos));
+        const productos = JSON.parse(carrito);
+        if (productos && productos.length)
+          res(productos);
+        else
+          rej([]);
       });
     })
   }
@@ -67,10 +86,9 @@ export default class CarritoHandler {
   obtenerTotal = () => {
     return new Promise((res, rej) => {
       this.obtenerProductos().then((productos) =>{
-        if (productos && productos.length)
-          res(this._objetoCalcularTotal(productos, 'subtotal'));
-        else
-          rej(0);
+        res(this._objetoCalcularTotal(productos, 'subtotal'));
+      }).catch(() => {
+        rej(0);          
       })
     });
   }
@@ -103,21 +121,19 @@ export default class CarritoHandler {
       const subtotal = (producto.precio * cantidad);
       const nuevoProducto = {...producto, cantidad, subtotal};
       this.obtenerProductos().then((productos) => {
-        if (productos && productos.length) {
-          this._agregarProducto(productos, nuevoProducto).then(() => {
-            res('El producto se agregó al carrito');
-          })
-          .catch(() => {
-            rej('El producto no se pudo agregar al carrito');
-          });
-        } else {
-          this._agregarPrimerProducto(nuevoProducto).then(() => {
-            res('El producto se agregó al carrito');
-          })
-          .catch(() => {
-            rej('El producto no se pudo agregar al carrito');
-          });
-        }
+        this._agregarProducto(productos, nuevoProducto).then(() => {
+          res('El producto se agregó al carrito');
+        })
+        .catch(() => {
+          rej('El producto no se pudo agregar al carrito');
+        });
+      }).catch(()=>{
+        this._agregarPrimerProducto(nuevoProducto).then(() => {
+          res('El producto se agregó al carrito');
+        })
+        .catch(() => {
+          rej('El producto no se pudo agregar al carrito');
+        });
       })
     })
   }
@@ -136,12 +152,9 @@ export default class CarritoHandler {
       const nuevoProductos = [...productosLimpio, nuevoProducto];
       AsyncStorage.setItem('carrito', JSON.stringify(nuevoProductos), (err) => {
         if (err)
-        rej();
-        else {
-          //{{BORRAR línea siguiente}}
-          this.obtenerProductos().then((items) => console.log(items))
+          rej();
+        else
           res();
-        }
       });
     })
   }
@@ -158,11 +171,8 @@ export default class CarritoHandler {
       AsyncStorage.setItem('carrito', JSON.stringify(nuevoProductos), (err) => {
         if (err)
           rej();
-        else {
-          //{{BORRAR línea siguiente}}
-          this.obtenerProducto(12).then((producto)=>{});
+        else
           res();
-        }
       });
     });
   }
