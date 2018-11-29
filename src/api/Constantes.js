@@ -4,3 +4,4 @@ export const SESION = '/sesion';
 export const REGISTRO = '/usuarios';
 export const PRODUCTOS = '/productos';
 export const CLIENTES = '/clientes';
+export const VENTAS = '/ventas';

@@ -1,5 +1,5 @@
 import Axios from 'axios'
-import {URL, SESION, REGISTRO, PRODUCTOS, CLIENTES} from './Constantes'
+import {URL, SESION, REGISTRO, PRODUCTOS, CLIENTES, VENTAS} from './Constantes'
 
 // ----------- Sesión -----------
 
@@ -200,6 +200,16 @@ export const PUT_Clientes = (idCliente, cliente) => {
 export const DELETE_Clientes = (id) => {
     return new Promise((resolve, reject) => {
         Axios.delete(`${CLIENTES}/${id}`).then((response) => {
+            resolve(response.data)
+        }).catch(err => {
+            reject(err)
+        })
+    })
+}
+
+export const POST_Ventas = (venta) => {
+    return new Promise((resolve, reject) => {
+        Axios.post(`${VENTAS}`, venta).then((response) => {
             resolve(response.data)
         }).catch(err => {
             reject(err)

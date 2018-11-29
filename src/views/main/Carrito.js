@@ -134,8 +134,8 @@ export default class Carrito extends Component {
             buttonColor={Colors.success} 
             title="Terminar venta" 
             onPress={() => { 
-              Actions.pop();
-              Actions.clientesEditar({cliente: this.state.cliente}) 
+							Actions.pop();
+              Actions.carritoVenta({refreshVistaCarrito: this.handleOnRefresh});
             }}
           >
             <Icon name="check" style={styles.actionButtonIcon} />

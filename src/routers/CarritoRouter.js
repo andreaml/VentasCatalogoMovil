@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Scene } from 'react-native-router-flux';
-import { CarritoVenta as CarritoVentaView } from '../views/main/carrito/CarritoVenta';
+import CarritoVentaView from '../views/main/carrito/CarritoVenta';
 
 const CarritoVenta = () => {
     return (

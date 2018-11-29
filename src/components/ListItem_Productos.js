@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import Snackbar from 'react-native-snackbar';
 import CarritoHandler from '../utils/CarritoHandler';
+import Colors from '../assets/Colors';
 
 type Props = {
   id: number,
@@ -25,12 +26,22 @@ export default class ListItem_Productos extends PureComponent<Props> {
         Snackbar.show({
             title: mensaje,
             duration: Snackbar.LENGTH_LONG,
+            action: {
+              title: 'OK',
+              onPress: () => Snackbar.dismiss(),
+              color: Colors.primary,
+            },
           });
     })
     .catch((mensaje) => {
         Snackbar.show({
             title: mensaje,
             duration: Snackbar.LENGTH_LONG,
+            action: {
+              title: 'OK',
+              onPress: () => Snackbar.dismiss(),
+              color: Colors.primary,
+            },
           });
     });
   }

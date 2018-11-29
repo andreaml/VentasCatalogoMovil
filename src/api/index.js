@@ -13,3 +13,6 @@ export const GET_Clientes       = ApiClient.GET_Clientes;
 export const POST_Clientes      = ApiClient.POST_Clientes;
 export const PUT_Clientes       = ApiClient.PUT_Clientes;
 export const DELETE_Clientes    = ApiClient.DELETE_Clientes;
+
+// Ventas
+export const POST_Ventas      = ApiClient.POST_Ventas;
