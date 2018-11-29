@@ -14,6 +14,7 @@
     "react-native-action-button": "^2.8.5",
     "react-native-image-crop-picker": "^0.21.3",
     "react-native-keyboard-aware-scroll-view": "^0.7.4",
+    "react-native-numeric-input": "^1.6.3",
     "react-native-paper": "^2.2.4",
     "react-native-parallax-header": "^1.0.6",
     "react-native-router-flux": "^4.0.5",
