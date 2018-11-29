@@ -107,12 +107,17 @@ class BottomNavigation extends Component {
             }
         },
         Carrito: {
-            screen: CarritoView,
+            screen: () => <CarritoView ref={carrito => this.carrito = carrito} />,
             navigationOptions: {
                 tabBarIcon: () => (
                     <Icon name='shopping-cart' color='white' size={24}/>
                 ),
                 tabBarColor: Colors.carrito,
+                tabBarOnPress: ({defaultHandler}) => {
+                    if (this.carrito)
+                        this.carrito.handleOnRefresh();
+                    defaultHandler();
+                }
             }
         }
     }, {
